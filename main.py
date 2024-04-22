@@ -30,7 +30,19 @@ def main(tickers: List[str], drop_existing_tables: bool = False):
 
 
 if __name__ == "__main__":
-    tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"]
+    tickers = [
+        # "AAPL",
+        # "MSFT",
+        # "GOOGL",
+        # "AMZN",
+        # "TSLA",
+        "SPY",
+        "COST",
+        "WMT",
+        "TGT",
+        "AMC",
+        "NIKE",
+    ]
     logger.info("Process started")
-    main(tickers, drop_existing_tables=True)
+    main(tickers)
     logger.info("Process finished successfully")

@@ -1,24 +1,18 @@
 import pandas as pd
 
 
-def enrich_exchange_rate_table(exchange_rate_table):
+def enrich_stock_history(stock_history):
     """
-    Function to enrich exchange rate table with additional columns.
+    Function to enrich the stock history data.
 
     Arguments:
-        exchange_rate_table: Pandas DataFrame with exchange rate data.
+        stock_history: Pandas DataFrame with historical stock data.
 
     Return:
-        Pandas DataFrame with additional columns.
+        Enriched Pandas DataFrame.
     """
-    exchange_rate_table["date"] = pd.to_datetime(exchange_rate_table["date"])
-    exchange_rate_table["year"] = exchange_rate_table["date"].dt.year
-    exchange_rate_table["month"] = exchange_rate_table["date"].dt.month
-    exchange_rate_table["day"] = exchange_rate_table["date"].dt.day
-    exchange_rate_table["day_of_week"] = exchange_rate_table["date"].dt.dayofweek
-    exchange_rate_table["week_of_year"] = (
-        exchange_rate_table["date"].dt.isocalendar().week
-    )
-    exchange_rate_table["quarter"] = exchange_rate_table["date"].dt.quarter
-    exchange_rate_table["currency"] = exchange_rate_table["stock"].str[-3:]
-    return exchange_rate_table
+    # Perform data enrichment operations here
+    # For example, calculate daily returns
+    stock_history["daily_return"] = stock_history["close"].pct_change()
+    stock_history["cumulative_return"] = (1 + stock_history["daily_return"]).cumprod()
+    return stock_history

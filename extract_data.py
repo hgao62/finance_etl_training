@@ -1,5 +1,8 @@
 import pandas as pd
 import yfinance as yf
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 FX_RATES_CURRENY_MAP = {
     "USD": "GBP",
@@ -22,35 +25,29 @@ def get_stock_history(stock):
     """
     ticker = yf.Ticker(stock)
     stock_history = ticker.history(period="1mo").reset_index()
+    if stock_history.empty:
+        return pd.DataFrame(
+            [],
+            columns=[
+                "date",
+                "open",
+                "high",
+                "low",
+                "close",
+                "volume",
+                "dividends",
+                "stock",
+            ],
+        )
     stock_history = stock_history.rename(str.lower, axis="columns")
     stock_history["stock"] = stock
     stock_history["date"] = pd.to_datetime(stock_history["date"])
+
     stock_history = stock_history[
         ["date", "open", "high", "low", "close", "volume", "dividends", "stock"]
     ]
+
     return stock_history
-
-
-def get_major_shareholders(stock):
-    """
-    Function to pull major shareholders data for a given stock.
-
-    Arguments:
-        stock: individual stock in which user wants to return data for.
-
-    Return:
-        Pandas DataFrame with major shareholders data.
-    """
-    ticker = yf.Ticker(stock)
-    major_share_holders = ticker.major_holders
-    major_share_holders = major_share_holders.rename(
-        columns={0: "percent", 1: "detail"}
-    )
-    major_share_holders["stock"] = stock
-    return major_share_holders
-
-
-# get_major_shareholders("IAG.L")
 
 
 def get_stock_financials(stock):
@@ -110,7 +107,12 @@ def get_stock_financials(stock):
     stock_financials = ticker.financials.transpose().reset_index()
     stock_financials.columns.values[0] = "date"
     stock_financials["stock"] = stock
-    return stock_financials[columns]
+    output_columns = []
+    for column in columns:
+        if column in stock_financials.columns:
+            output_columns.append(column)
+
+    return stock_financials[output_columns]
 
 
 def get_news(stock):
@@ -128,6 +130,32 @@ def get_news(stock):
     news_df = pd.DataFrame(news_list)
     news_df["Ticker"] = stock
     news_df = news_df.drop(["thumbnail", "relatedTickers"], axis=1)
+
+    # Extract keywords from news headlines
+    keywords = []
+    """
+    >>> import nltk
+    >>> nltk.download('stopwords')
+    nltk.download('punkt')
+    """
+    stop_words = set(stopwords.words("english"))
+    for headline in news_df["title"]:
+        tokens = word_tokenize(headline)
+        keywords.extend(
+            [word.lower() for word in tokens if word.lower() not in stop_words]
+        )
+
+    # Count the frequency of each keyword
+    keyword_freq = nltk.FreqDist(keywords)
+
+    # Get the top 5 most common keywords
+    top_keywords = keyword_freq.most_common(5)
+
+    # Add the top keywords to the news DataFrame
+    news_df["top_keywords"] = [
+        ", ".join([keyword for keyword, _ in top_keywords])
+    ] * len(news_df)
+
     return news_df
 
 
@@ -135,7 +163,26 @@ def get_exchange_rate(stock, interval="1d", period="1d"):
     currency_code = {}
 
     ticker = yf.Ticker(stock)
-    currency_code = ticker.fast_info["currency"]
+    try:
+        currency_code = ticker.fast_info["currency"]
+    except KeyError:
+        return pd.DataFrame(
+            [],
+            columns=[
+                "Date",
+                "Open",
+                "Currenyc Close",
+                "Low",
+                "High",
+                "Fromcurrency",
+                "Tocurrency",
+                "Exchange Id",
+                "Currency Date key",
+                "Ticker",
+                "Currency Code",
+            ],
+        )
+
     to_currency = FX_RATES_CURRENY_MAP.get(currency_code.upper(), "USD")
     fx_rate_ticker = f"{currency_code}{to_currency}=X"
     fx_rates = yf.download(fx_rate_ticker, period=period, interval=interval)
@@ -154,6 +201,23 @@ def get_exchange_rate(stock, interval="1d", period="1d"):
     fx_rates.rename(columns={"Close": "Currency Close"}, inplace=True)
 
     return fx_rates
+
+
+def clean_stock_history(stock_history):
+    """
+    Function to clean the stock history data.
+
+    Arguments:
+        stock_history: Pandas DataFrame with historical stock data.
+
+    Return:
+        Cleaned Pandas DataFrame.
+    """
+    # Perform data cleaning operations here
+    # For example, remove rows with missing values
+    stock_history = stock_history.dropna()
+
+    return stock_history
 
 
 if __name__ == "__main__":
