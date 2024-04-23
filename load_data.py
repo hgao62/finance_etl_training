@@ -7,6 +7,7 @@ from enum import Enum
 from getpass import getpass
 from mysql.connector import connect, Error
 from config import ENV
+import pandas as pd
 
 
 class DBType(Enum):
@@ -27,7 +28,7 @@ MYSQL_CONNECTION_STRING = (
 )
 logger.info(f"My sql connection string used is:{MYSQL_CONNECTION_STRING}")
 print(MYSQL_CONNECTION_STRING)
-MYSQL_ENGINE = create_engine(MYSQL_CONNECTION_STRING, echo=True)
+MYSQL_ENGINE = create_engine(MYSQL_CONNECTION_STRING)
 
 
 DB_ENGINE_MAP = {DBType.SQLITE: ENGINE, DBType.MYSQL: MYSQL_ENGINE}
@@ -49,7 +50,7 @@ def save_df_to_db(
     Returns:
         None. This function logs a note in the log file to confirm that data has been sent to the SQL database.
     """
-
+    df["write_time"] = pd.Timestamp.now()
     df.to_sql(table_name, engine, if_exists=if_exists, index=False, dtype=dtype)
     logger.info(f"{len(df)} records inserted into {table_name} table")
 

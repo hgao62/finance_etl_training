@@ -38,10 +38,10 @@ def main(
         news = extract_data.get_news(stock)
         fx_rates = extract_data.get_exchange_rate(stock, interval, period)
 
-        load_data.save_df_to_db(stock_history, "stock_history", db_engine)
-        load_data.save_df_to_db(stock_financials, "financials", db_engine)
-        load_data.save_df_to_db(news, "news", db_engine)
-        load_data.save_df_to_db(fx_rates, "exchange_rate", db_engine)
+        load_data.save_df_to_db(stock_history, "stock_history", engine=db_engine)
+        load_data.save_df_to_db(stock_financials, "financials", engine=db_engine)
+        load_data.save_df_to_db(news, "news", engine=db_engine)
+        load_data.save_df_to_db(fx_rates, "exchange_rate", engine=db_engine)
 
     logger.info("Process finished successfully")
 
@@ -62,4 +62,4 @@ if __name__ == "__main__":
     ]
 
     tickers = ["IAG.L"]
-    main(tickers)
+    main(tickers, drop_existing_tables=True)
