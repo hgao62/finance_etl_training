@@ -1,39 +1,27 @@
 # Use the official Python image as the base image
-FROM python:3.8-slim-buster
-
-# Set environment variables for Airflow configuration
-ENV AIRFLOW_HOME=/usr/local/airflow
-ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
-
-# Set the working directory
-WORKDIR /usr/local/airflow
+FROM python:3.9-slim-buster
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get -y install git && \
+    apt-get clean
 
-# Install Airflow with SQLite backend
-RUN pip install apache-airflow
-
-# Initialize the Airflow database and create admin user during image build
-RUN airflow db init
-
-RUN airflow users create --username admin --password password123 --firstname john --lastname smith --role Admin --email johnsmith@example.com
-
-# Copy your requirements.txt file to the container
+ENV AIRFLOW_HOME=/usr/src/app
+ENV AIRFLOW__CORE__DAGS_FOLDER=/usr/src/app/airflow/dags
+# create a directory for the app on the container(linux based system)  
+RUN mkdir /usr/src/app
+# set the working directory to the directory created above
+WORKDIR /usr/src/app
+# copy the requirements file to the working directory
 COPY requirements.txt ./
 
-# Install the required Python packages
-RUN pip install -r requirements.txt
+# Set the DAGs folder path
 
-# Copy your DAG file to the DAGs directory
-# handled by the docker-compose.yml
 COPY ./airflow/dags/. ./dags 
 
-# Expose the Airflow webserver port
-EXPOSE 8080
+# install the dependencies
+RUN pip install -r requirements.txt
 
-# Start the Airflow webserver
-CMD ["airflow", "webserver", "--port", "8080"]
+
+# copy the content of the local src directory to the working directory
+COPY . .

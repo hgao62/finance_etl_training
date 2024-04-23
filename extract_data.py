@@ -13,7 +13,7 @@ FX_RATES_CURRENY_MAP = {
 }
 
 
-def get_stock_history(stock):
+def get_stock_history(stock, period="1d"):
     """
     Function to pull historical stock data for a given stock.
 
@@ -24,7 +24,7 @@ def get_stock_history(stock):
         Pandas DataFrame with historical stock data.
     """
     ticker = yf.Ticker(stock)
-    stock_history = ticker.history(period="1mo").reset_index()
+    stock_history = ticker.history(period=period).reset_index()
     if stock_history.empty:
         return pd.DataFrame(
             [],

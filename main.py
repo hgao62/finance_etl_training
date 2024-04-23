@@ -13,15 +13,20 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def main(tickers: List[str], drop_existing_tables: bool = False):
+def main(
+    tickers: List[str],
+    period: str = "1d",
+    interval: str = "1d",
+    drop_existing_tables: bool = False,
+):
     if drop_existing_tables:
         load_data.drop_existing_tables()
     for stock in tickers:
-        stock_history = extract_data.get_stock_history(stock)
+        stock_history = extract_data.get_stock_history(stock, period)
 
         stock_financials = extract_data.get_stock_financials(stock)
         news = extract_data.get_news(stock)
-        fx_rates = extract_data.get_exchange_rate(stock)
+        fx_rates = extract_data.get_exchange_rate(stock, interval, period)
 
         load_data.save_df_to_sqllite(stock_history, "stock_history")
         load_data.save_df_to_sqllite(stock_financials, "financials")

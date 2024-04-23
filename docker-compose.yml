@@ -1,13 +1,26 @@
-version: '3'
+version: '3' # Specify the version of Docker Compose
 services:
+# Define the Airflow webserver service
  airflow_webserver:
+ # Build the Docker image using the Dockerfile in the current directory
    build:
+   # Use the current directory as the build
      context: .
+     # Specify the Dockerfile to use for the build
      dockerfile: Dockerfile
+   
    ports:
-     - "8080:8080"  # Expose the Airflow webserver port
-   # volumes:
-   # DAGs copied directly in Dockerfile, preference would be to use volumes section
-   #  - ./stocks_ETL_project/airflow/dags:/usr/local/airflow/dags  # Update the path to your local DAGs directory
-  # Space for other volumes or configurations
-   command: ["airflow", "webserver", "--port", "8080"]
+     - "8070:8080"  # Map the container port 8080 to the host port 8070
+   # Define the command to run when the container starts
+   command: > 
+        bash -c "airflow db init
+        && airflow users create --username admin --password admin --firstname kobe --lastname Gao --role Admin --email hgao62@uwo.ca
+        && airflow webserver -p 8080"
+   
+   
+   healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"] # Check if the webserver is healthy
+      interval: 30s
+      timeout: 30s
+      retries: 5
+
