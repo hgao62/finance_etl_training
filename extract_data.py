@@ -227,4 +227,4 @@ def clean_stock_history(stock_history):
 if __name__ == "__main__":
     tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"]
     # get_major_shareholders("APPL")
-    get_news("APPL")
+    # get_news("APPL")

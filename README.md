@@ -111,3 +111,9 @@ airflow config get-value core executor
 mysql -u root -p
 
 ```
+
+delete all local docker images, run command line below in powershell
+https://stackoverflow.com/questions/44785585/how-can-i-delete-all-local-docker-images
+```
+docker images -a -q | % { docker image rm $_ -f }
+```

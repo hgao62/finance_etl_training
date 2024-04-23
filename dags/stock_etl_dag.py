@@ -3,12 +3,12 @@ import os
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from main import main
+import main
 from load_data import DBType
 
 
 def run_etl(stock_list, period, interval, drop_existing_table, db_type):
-    main(stock_list, period, interval, drop_existing_table, db_type)
+    main.run_pipeline(stock_list, period, interval, drop_existing_table, db_type)
 
 
 # DAG arguments with default parameters
@@ -16,7 +16,7 @@ default_args = {
     "owner": "airflow",
     "start_date": datetime(2024, 4, 22, 20, 0),  # Start at 8 PM
     "depends_on_past": False,
-    "retries": 1,
+    "retries": 0,
     "retry_delay": timedelta(minutes=5),
     "params": {
         "stock_list": ["AAPL"],

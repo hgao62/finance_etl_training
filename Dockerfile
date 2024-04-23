@@ -12,7 +12,7 @@ ENV AIRFLOW__CORE__LOAD_EXAMPLES=false
 
 
 ENV AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=mysql://airflow_user:airflow_pass@mysql:3306/airflow_db
-ENV AIRFLOW__CORE__EXECUTOR=LocalExecutor
+ENV AIRFLOW__CORE__EXECUTOR=SequentialExecutor
 ENV PYTHONPATH=/usr/src/app
 ENV ENV=PROD
 # create a directory for the app on the container(linux based system)  

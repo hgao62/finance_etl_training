@@ -14,7 +14,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def main(
+def run_pipeline(
     tickers: List[str],
     period: str = "1d",
     interval: str = "1d",
@@ -33,15 +33,15 @@ def main(
         load_data.drop_existing_tables(db_engine)
     for stock in tickers:
         stock_history = extract_data.get_stock_history(stock, period)
-
-        stock_financials = extract_data.get_stock_financials(stock)
-        news = extract_data.get_news(stock)
-        fx_rates = extract_data.get_exchange_rate(stock, interval, period)
-
         load_data.save_df_to_db(stock_history, "stock_history", engine=db_engine)
-        load_data.save_df_to_db(stock_financials, "financials", engine=db_engine)
-        load_data.save_df_to_db(news, "news", engine=db_engine)
-        load_data.save_df_to_db(fx_rates, "exchange_rate", engine=db_engine)
+
+        # news = extract_data.get_news(stock)
+        # load_data.save_df_to_db(news, "news", engine=db_engine)
+        # fx_rates = extract_data.get_exchange_rate(stock, interval, period)
+        # load_data.save_df_to_db(fx_rates, "exchange_rate", engine=db_engine)
+
+        # load_data.save_df_to_db(stock_financials, "financials", engine=db_engine)
+        # stock_financials = extract_data.get_stock_financials(stock)
 
     logger.info("Process finished successfully")
 
@@ -61,5 +61,5 @@ if __name__ == "__main__":
         "NIKE",
     ]
 
-    tickers = ["IAG.L"]
-    main(tickers, drop_existing_tables=True)
+    tickers = ["AAPL"]
+    run_pipeline(tickers, drop_existing_tables=True, db_type="mysql")

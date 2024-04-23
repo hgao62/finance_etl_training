@@ -31,7 +31,7 @@ print(MYSQL_CONNECTION_STRING)
 MYSQL_ENGINE = create_engine(MYSQL_CONNECTION_STRING)
 
 
-DB_ENGINE_MAP = {DBType.SQLITE: ENGINE, DBType.MYSQL: MYSQL_ENGINE}
+DB_ENGINE_MAP = {DBType.SQLITE.value: ENGINE, DBType.MYSQL.value: MYSQL_ENGINE}
 
 
 def save_df_to_db(
@@ -51,8 +51,11 @@ def save_df_to_db(
         None. This function logs a note in the log file to confirm that data has been sent to the SQL database.
     """
     df["write_time"] = pd.Timestamp.now()
-    df.to_sql(table_name, engine, if_exists=if_exists, index=False, dtype=dtype)
-    logger.info(f"{len(df)} records inserted into {table_name} table")
+    try:
+        df.to_sql(table_name, engine, if_exists=if_exists, index=False, dtype=dtype)
+    except Exception as e:
+        logger.exception(repr(e))
+        logger.info(f"inert into {table_name} failed due to :{repr(e)}")
 
 
 def drop_existing_tables(engine=ENGINE):
