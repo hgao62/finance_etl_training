@@ -2,14 +2,39 @@ import sqlite3
 from sqlalchemy import create_engine
 import sqlalchemy
 import logging
+from enum import Enum
+
+from getpass import getpass
+from mysql.connector import connect, Error
+
+
+class DBType(Enum):
+    SQLITE = "sqlite"
+    MYSQL = "mysql"
+
 
 logger = logging.getLogger(__name__)
 DB_NAME = "stock_db"
 CONN = sqlite3.connect(f"./database/{DB_NAME}.db")
 ENGINE = create_engine(f"sqlite:///./database/{DB_NAME}.db")
 
+MYSQL_CONN = connect(
+    host="localhost",
+    user="airflow_user",
+    password="airflow_pass",
+    database="airflow_db",
+)
+MYSQL_ENGINE = create_engine(
+    "mysql+mysqlconnector://airflow_user:airflow_pass@localhost/airflow_db", echo=True
+)
 
-def save_df_to_sqllite(df, table_name, if_exists="append", dtype=None) -> None:
+
+DB_ENGINE_MAP = {DBType.SQLITE: ENGINE, DBType.MYSQL: MYSQL_ENGINE}
+
+
+def save_df_to_db(
+    df, table_name, if_exists="append", dtype=None, engine=MYSQL_ENGINE
+) -> None:
     """
     Function to send a dataframe to SQL database.
 
@@ -24,11 +49,11 @@ def save_df_to_sqllite(df, table_name, if_exists="append", dtype=None) -> None:
         None. This function logs a note in the log file to confirm that data has been sent to the SQL database.
     """
 
-    df.to_sql(table_name, ENGINE, if_exists=if_exists, index=False, dtype=dtype)
+    df.to_sql(table_name, engine, if_exists=if_exists, index=False, dtype=dtype)
     logger.info(f"{len(df)} records inserted into {table_name} table")
 
 
-def drop_existing_tables():
+def drop_existing_tables(engine=ENGINE):
     """
     Function to clear database prior to new batch import.
     To be replaced with drop() or drop_all() method.
@@ -51,7 +76,7 @@ def drop_existing_tables():
         "exchange_rate",
     ]
 
-    with ENGINE.connect() as conn:
+    with engine.connect() as conn:
         for table in table_list:
             try:
                 conn.execute(f"DROP TABLE IF EXISTS {table};")

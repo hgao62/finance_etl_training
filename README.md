@@ -99,3 +99,15 @@ airflow scheduler
 ```
 airflow dags list
 ```
+
+3. check current executor type
+```
+airflow config get-value core executor
+```
+
+### how to run mysql commands within docker container
+
+```
+mysql -u root -p
+
+```

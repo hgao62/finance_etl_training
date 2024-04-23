@@ -1,5 +1,5 @@
 # Use the official Python image as the base image
-FROM python:3.9-slim-buster
+FROM python:3.9
 
 # Install system dependencies
 RUN apt-get update && \
@@ -11,8 +11,9 @@ ENV AIRFLOW_HOME=/usr/src/app
 ENV AIRFLOW__CORE__LOAD_EXAMPLES=false 
 
 
-ENV AIRFLOW__SCHEDULER__SCHEDULER_HEALTH_CHECK_THRESHOLD = 240
-
+ENV AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=mysql://airflow_user:airflow_pass@mysql:3306/airflow_db
+# ENV AIRFLOW__CORE__EXECUTOR=LocalExecutor
+ENV AIRFLOW__CORE__EXECUTOR=LocalKubernetesExecutor
 ENV PYTHONPATH=/usr/src/app
 # create a directory for the app on the container(linux based system)  
 RUN mkdir /usr/src/app

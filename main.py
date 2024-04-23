@@ -2,6 +2,7 @@ from typing import List
 import extract_data
 import load_data
 import logging  # 1. import logging
+from load_data import DBType
 
 logging.basicConfig(
     filemode="a",
@@ -18,15 +19,18 @@ def main(
     period: str = "1d",
     interval: str = "1d",
     drop_existing_tables: bool = False,
+    db_type: DBType = DBType.MYSQL,
 ):
+    db_engine = load_data.DB_ENGINE_MAP[db_type]
     logger.info(
-        "Running main function with parameters tickers:%s period:%s interval: %s",
+        "Running main function with parameters tickers:%s period:%s interval: %s  db_type: %s",
         tickers,
         period,
         interval,
+        db_type,
     )
     if drop_existing_tables:
-        load_data.drop_existing_tables()
+        load_data.drop_existing_tables(db_engine)
     for stock in tickers:
         stock_history = extract_data.get_stock_history(stock, period)
 
@@ -34,10 +38,10 @@ def main(
         news = extract_data.get_news(stock)
         fx_rates = extract_data.get_exchange_rate(stock, interval, period)
 
-        load_data.save_df_to_sqllite(stock_history, "stock_history")
-        load_data.save_df_to_sqllite(stock_financials, "financials")
-        load_data.save_df_to_sqllite(news, "news")
-        load_data.save_df_to_sqllite(fx_rates, "exchange_rate")
+        load_data.save_df_to_db(stock_history, "stock_history", db_engine)
+        load_data.save_df_to_db(stock_financials, "financials", db_engine)
+        load_data.save_df_to_db(news, "news", db_engine)
+        load_data.save_df_to_db(fx_rates, "exchange_rate", db_engine)
 
     logger.info("Process finished successfully")
 
