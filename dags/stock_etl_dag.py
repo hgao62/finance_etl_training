@@ -23,7 +23,7 @@ default_args = {
         "period": "1d",
         "interval": "1d",
         "drop_existing_table": True,
-        "db_type": DBType.MYSQL,
+        "db_type": DBType.MYSQL.value,
     },
 }
 
