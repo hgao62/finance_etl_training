@@ -113,10 +113,7 @@ def get_stock_financials(stock):
     stock_financials.columns.values[0] = "date"
     stock_financials["stock"] = stock
     output_columns = []
-    for column in columns:
-        if column in stock_financials.columns:
-            output_columns.append(column)
-
+    output_columns = stock_financials.columns.intersection(columns)
     return stock_financials[output_columns]
 
 
