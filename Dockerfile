@@ -11,6 +11,8 @@ ENV AIRFLOW_HOME=/usr/src/app
 ENV AIRFLOW__CORE__LOAD_EXAMPLES=false 
 
 
+ENV AIRFLOW__SCHEDULER__SCHEDULER_HEALTH_CHECK_THRESHOLD = 240
+
 ENV PYTHONPATH=/usr/src/app
 # create a directory for the app on the container(linux based system)  
 RUN mkdir /usr/src/app
