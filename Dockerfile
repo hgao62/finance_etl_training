@@ -6,7 +6,7 @@ RUN apt-get update && \
     apt-get -y install git && \
     apt-get clean
 
-# ENV AIRFLOW_HOME=/usr/src/app
+ENV AIRFLOW_HOME=/usr/src/app
 # ENV AIRFLOW__CORE__DAGS_FOLDER=/usr/src/app/airflow/dags
 
 ENV PYTHONPATH=/usr/src/app
