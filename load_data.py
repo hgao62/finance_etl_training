@@ -6,6 +6,7 @@ from enum import Enum
 
 from getpass import getpass
 from mysql.connector import connect, Error
+from config import ENV
 
 
 class DBType(Enum):
@@ -24,9 +25,15 @@ MYSQL_CONN = connect(
     password="airflow_pass",
     database="airflow_db",
 )
-MYSQL_ENGINE = create_engine(
-    "mysql+mysqlconnector://airflow_user:airflow_pass@localhost/airflow_db", echo=True
+
+
+MYSQL_CONNECTION_STRING = (
+    "mysql://airflow_user:airflow_pass@mysql:3306/airflow_db"
+    if ENV == "PROD"
+    else "mysql+mysqlconnector://airflow_user:airflow_pass@localhost/airflow_db"
 )
+logger.info(f"My sql connection string used is:{MYSQL_CONNECTION_STRING}")
+MYSQL_ENGINE = create_engine(MYSQL_CONNECTION_STRING, echo=True)
 
 
 DB_ENGINE_MAP = {DBType.SQLITE: ENGINE, DBType.MYSQL: MYSQL_ENGINE}
