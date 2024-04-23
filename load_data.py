@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 DB_NAME = "stock_db"
 CONN = sqlite3.connect(f"./database/{DB_NAME}.db")
-ENGINE = create_engine(f"sqlite:///./database/{DB_NAME}.db", echo=True)
+ENGINE = create_engine(f"sqlite:///./database/{DB_NAME}.db")
 
 
 def save_df_to_sqllite(df, table_name, if_exists="append", dtype=None) -> None:

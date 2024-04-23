@@ -20,7 +20,7 @@ def main(
     drop_existing_tables: bool = False,
 ):
     logger.info(
-        "Running main function with parameters tickers:%s period:%s interval%s",
+        "Running main function with parameters tickers:%s period:%s interval: %s",
         tickers,
         period,
         interval,
@@ -39,6 +39,8 @@ def main(
         load_data.save_df_to_sqllite(news, "news")
         load_data.save_df_to_sqllite(fx_rates, "exchange_rate")
 
+    logger.info("Process finished successfully")
+
 
 if __name__ == "__main__":
     tickers = [
@@ -54,7 +56,6 @@ if __name__ == "__main__":
         "AMC",
         "NIKE",
     ]
-    logger.info("Process started")
+
     tickers = ["IAG.L"]
     main(tickers)
-    logger.info("Process finished successfully")
