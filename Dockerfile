@@ -6,8 +6,10 @@ RUN apt-get update && \
     apt-get -y install git && \
     apt-get clean
 
-ENV AIRFLOW_HOME=/usr/src/app
-ENV AIRFLOW__CORE__DAGS_FOLDER=/usr/src/app/airflow/dags
+# ENV AIRFLOW_HOME=/usr/src/app
+# ENV AIRFLOW__CORE__DAGS_FOLDER=/usr/src/app/airflow/dags
+
+ENV PYTHONPATH=/usr/src/app
 # create a directory for the app on the container(linux based system)  
 RUN mkdir /usr/src/app
 # set the working directory to the directory created above
@@ -17,7 +19,7 @@ COPY requirements.txt ./
 
 # Set the DAGs folder path
 
-COPY ./airflow/dags/. ./dags 
+# COPY ./airflow/dags/. ./dags 
 
 # install the dependencies
 RUN pip install -r requirements.txt
