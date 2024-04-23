@@ -19,13 +19,6 @@ DB_NAME = "stock_db"
 CONN = sqlite3.connect(f"./database/{DB_NAME}.db")
 ENGINE = create_engine(f"sqlite:///./database/{DB_NAME}.db")
 
-MYSQL_CONN = connect(
-    host="localhost",
-    user="airflow_user",
-    password="airflow_pass",
-    database="airflow_db",
-)
-
 
 MYSQL_CONNECTION_STRING = (
     "mysql://airflow_user:airflow_pass@mysql:3306/airflow_db"
@@ -33,6 +26,7 @@ MYSQL_CONNECTION_STRING = (
     else "mysql+mysqlconnector://airflow_user:airflow_pass@localhost/airflow_db"
 )
 logger.info(f"My sql connection string used is:{MYSQL_CONNECTION_STRING}")
+print(MYSQL_CONNECTION_STRING)
 MYSQL_ENGINE = create_engine(MYSQL_CONNECTION_STRING, echo=True)
 
 
