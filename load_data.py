@@ -23,7 +23,9 @@ def save_df_to_sqllite(df, table_name, if_exists="append", dtype=None) -> None:
     Returns:
         None. This function logs a note in the log file to confirm that data has been sent to the SQL database.
     """
+
     df.to_sql(table_name, ENGINE, if_exists=if_exists, index=False, dtype=dtype)
+    logger.info(f"{len(df)} records inserted into {table_name} table")
 
 
 def drop_existing_tables():

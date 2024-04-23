@@ -19,6 +19,12 @@ def main(
     interval: str = "1d",
     drop_existing_tables: bool = False,
 ):
+    logger.info(
+        "Running main function with parameters tickers:%s period:%s interval%s",
+        tickers,
+        period,
+        interval,
+    )
     if drop_existing_tables:
         load_data.drop_existing_tables()
     for stock in tickers:
@@ -49,5 +55,6 @@ if __name__ == "__main__":
         "NIKE",
     ]
     logger.info("Process started")
+    tickers = ["IAG.L"]
     main(tickers)
     logger.info("Process finished successfully")

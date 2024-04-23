@@ -7,7 +7,9 @@ RUN apt-get update && \
     apt-get clean
 
 ENV AIRFLOW_HOME=/usr/src/app
-# ENV AIRFLOW__CORE__DAGS_FOLDER=/usr/src/app/airflow/dags
+# Do not load the example dags
+ENV AIRFLOW__CORE__LOAD_EXAMPLES=false 
+
 
 ENV PYTHONPATH=/usr/src/app
 # create a directory for the app on the container(linux based system)  
