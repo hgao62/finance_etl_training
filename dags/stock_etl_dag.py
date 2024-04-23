@@ -18,9 +18,9 @@ default_args = {
     "retries": 1,
     "retry_delay": timedelta(minutes=5),
     "params": {
-        "stock_list": ["IAG.L"],
-        "period": "3d",
-        "interval": "3d",
+        "stock_list": ["AAPL"],
+        "period": "1d",
+        "interval": "1d",
     },
 }
 

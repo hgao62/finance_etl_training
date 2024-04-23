@@ -25,7 +25,7 @@ def get_stock_history(stock):
 it should return a data frame like this below
 
 <!-- ![stock history](stock_history_output.png) -->
-<img alt="stock history" src="./stock_history_output.png" width="1000">
+<img alt="stock history" src="./docs/stock_history_output.png" width="1000">
 
 ```python
 def get_stock_financials(stock):
@@ -37,12 +37,12 @@ def get_stock_financials(stock):
 ```
 it should return a data frame like this below
 
-<img alt="stock financial" src="./stock_financial.png" width="1500">
+<img alt="stock financial" src="./docs/stock_financial.png" width="1500">
 
 
 When creating functions, please add type hinting and doc string like below
 
-<img alt="stock financial" src="./type_hinting.png" width="1000">
+<img alt="stock financial" src="./docs/type_hinting.png" width="1000">
 
 
 ### Task 2
@@ -61,7 +61,7 @@ get_exchange_rate("AAPL", period="5d", interval="1d", "GBP")
 ```
 and output should look like below
 
-<img alt="stock financial" src="./exchange_rate.png" width="1000">
+<img alt="stock financial" src="./docs/exchange_rate.png" width="1000">
 
 ```python
 2. add function below to extract_data.py
@@ -69,7 +69,7 @@ def get_news(stock):
 ```
 and output should look like below
 
-<img alt="stock financial" src="./news.png" width="1000">
+<img alt="stock financial" src="./docs/news.png" width="1000">
 
 
 
