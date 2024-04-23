@@ -4,10 +4,11 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from main import main
+from load_data import DBType
 
 
-def run_etl(stock_list, period, interval):
-    main(stock_list, period, interval)
+def run_etl(stock_list, period, interval, drop_existing_table, db_type):
+    main(stock_list, period, interval, drop_existing_table, db_type)
 
 
 # DAG arguments with default parameters
@@ -21,6 +22,8 @@ default_args = {
         "stock_list": ["AAPL"],
         "period": "1d",
         "interval": "1d",
+        "drop_existing_table": True,
+        "db_type": DBType.MYSQL,
     },
 }
 
@@ -37,7 +40,13 @@ dag = DAG(
 task_run_etl = PythonOperator(
     task_id="run_load_stock_data_etl",
     python_callable=run_etl,
-    op_args=["{{ params.stock_list }}", "{{ params.period }}", "{{ params.interval }}"],
+    op_args=[
+        "{{ params.stock_list }}",
+        "{{ params.period }}",
+        "{{ params.interval }}",
+        "{{ params.drop_existing_table}}",
+        "{{ params.db_type}}",
+    ],
     dag=dag,
 )
 

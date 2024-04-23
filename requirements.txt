@@ -8,4 +8,3 @@ SQLAlchemy
 yfinance==0.2.37
 mysqlclient==2.2.0
 mysql-connector-python
-dotenv
