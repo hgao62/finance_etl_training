@@ -3,7 +3,9 @@ import extract_data
 import load_data
 import logging  # 1. import logging
 from load_data import DBType
+from transform_data import enrich_stock_history
 
+# 2. Add logging configuration
 logging.basicConfig(
     filemode="a",
     format="%(asctime)s - %(levelname)s- %(filename)s:%(lineno)s  - %(message)s",
@@ -11,6 +13,7 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
+# 3. Create a logger object
 logger = logging.getLogger(__name__)
 
 
@@ -33,6 +36,7 @@ def run_pipeline(
         load_data.drop_existing_tables(db_engine)
     for stock in tickers:
         stock_history = extract_data.get_stock_history(stock, period)
+        stock_history = enrich_stock_history(stock_history)
         load_data.save_df_to_db(stock_history, "stock_history", engine=db_engine)
 
         # news = extract_data.get_news(stock)
@@ -62,4 +66,5 @@ if __name__ == "__main__":
     ]
 
     tickers = ["AAPL"]
-    run_pipeline(tickers, drop_existing_tables=True, db_type="mysql")
+    period = "5d"
+    run_pipeline(tickers, period=period, db_type="mysql")

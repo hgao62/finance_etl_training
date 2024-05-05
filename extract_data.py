@@ -1,8 +1,5 @@
 import pandas as pd
 import yfinance as yf
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 import logging  # 1. import logging
 
 logger = logging.getLogger(__name__)
@@ -133,31 +130,6 @@ def get_news(stock):
     logging.info(f"news table dataframe downloaded: {news_df}")
     news_df["Ticker"] = stock
     news_df = news_df.drop(["thumbnail", "relatedTickers"], axis=1)
-
-    # # Extract keywords from news headlines
-    # keywords = []
-    # """
-    # >>> import nltk
-    # >>> nltk.download('stopwords')
-    # nltk.download('punkt')
-    # """
-    # stop_words = set(stopwords.words("english"))
-    # for headline in news_df["title"]:
-    #     tokens = word_tokenize(headline)
-    #     keywords.extend(
-    #         [word.lower() for word in tokens if word.lower() not in stop_words]
-    #     )
-
-    # # Count the frequency of each keyword
-    # keyword_freq = nltk.FreqDist(keywords)
-
-    # # Get the top 5 most common keywords
-    # top_keywords = keyword_freq.most_common(5)
-
-    # # Add the top keywords to the news DataFrame
-    # news_df["top_keywords"] = [
-    #     ", ".join([keyword for keyword, _ in top_keywords])
-    # ] * len(news_df)
 
     return news_df
 

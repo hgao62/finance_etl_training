@@ -18,7 +18,7 @@ class DBType(Enum):
 logger = logging.getLogger(__name__)
 DB_NAME = "stock_db"
 CONN = sqlite3.connect(f"./database/{DB_NAME}.db")
-ENGINE = create_engine(f"sqlite:///./database/{DB_NAME}.db")
+ENGINE = create_engine(f"sqlite:///./database/{DB_NAME}.db", echo=True)
 
 
 MYSQL_CONNECTION_STRING = (
@@ -55,7 +55,7 @@ def save_df_to_db(
         df.to_sql(table_name, engine, if_exists=if_exists, index=False, dtype=dtype)
     except Exception as e:
         logger.exception(repr(e))
-        logger.info(f"inert into {table_name} failed due to :{repr(e)}")
+        logger.exception(f"inert into {table_name} failed due to :{repr(e)}")
 
 
 def drop_existing_tables(engine=ENGINE):
