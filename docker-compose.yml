@@ -23,7 +23,7 @@ services:
      dockerfile: Dockerfile
    
    ports:
-     - "8070:8080"  # Map the container port 8080 to the host port 8070
+     - "8080:8080"  # Map the container port 8080 to the host port 8070
    # Define the command to run when the container starts
    entrypoint: ./entrypoint.sh
 
