@@ -8,6 +8,7 @@ from load_data import DBType
 
 
 def run_etl(stock_list, period, interval, drop_existing_table, db_type):
+    print(f" stock list type is: {type(stock_list)}")
     main.run_pipeline(stock_list, period, interval, drop_existing_table, db_type)
 
 
@@ -34,6 +35,7 @@ dag = DAG(
     start_date=datetime(2024, 4, 22),
     description="My DAG for executing functions once a day at 8 PM",
     schedule="@daily",
+    render_template_as_native_obj=True,
 )
 
 # Define a task to run the ETL function
