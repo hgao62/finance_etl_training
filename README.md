@@ -89,7 +89,7 @@ def enrich_stock_history(stock_history:pd.DataFrame):
      
 ```python
  def save_df_to_db(
-    df, table_name, if_exists="append", dtype=None, engine=MYSQL_ENGINE 
+    df, table_name,  engine, if_exists="append", dtype=None,
 ) -> None:
     """
     Function to send a dataframe to SQL database.
@@ -97,10 +97,11 @@ def enrich_stock_history(stock_history:pd.DataFrame):
     Args:
         df: DataFrame to be sent to the SQL database.
         table_name: Name of the table in the SQL database.
+        engine: db engine type, in our project, this could be sqlite or mysql
         if_exists: Action to take if the table already exists in the SQL database.
                    Options: "fail", "replace", "append" (default: "append").
         dtype: Dictionary of column names and data types to be used when creating the table (default: None).
-        engine(default to MYSQL_ENGINE): db engine type, in our project, this could be sqlite or mysql
+        
 
     Returns:
         None. This function logs a note in the log file to confirm that data has been sent to the SQL database.
