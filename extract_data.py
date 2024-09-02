@@ -1,6 +1,7 @@
+import logging  # 1. import logging
+
 import pandas as pd
 import yfinance as yf
-import logging  # 1. import logging
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +25,7 @@ def get_stock_history(stock, period="1d"):
         Pandas DataFrame with historical stock data.
     """
     ticker = yf.Ticker(stock)
+    sector = ticker.info["sector"]
     stock_history = ticker.history(period=period).reset_index()
     logging.info(f"stock_history dataframe downloaded: {stock_history}")
     if stock_history.empty:
@@ -43,11 +45,22 @@ def get_stock_history(stock, period="1d"):
     stock_history = stock_history.rename(str.lower, axis="columns")
     stock_history["stock"] = stock
     stock_history["date"] = pd.to_datetime(stock_history["date"])
+    stock_history["sector"] = sector
 
     stock_history = stock_history[
-        ["date", "open", "high", "low", "close", "volume", "dividends", "stock"]
+        [
+            "date",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "dividends",
+            "stock",
+            "sector",
+        ]
     ]
-
+    stock
     return stock_history
 
 
@@ -196,7 +209,37 @@ def clean_stock_history(stock_history):
     return stock_history
 
 
+def get_exchange_rate2(from_currency, to_currency, period, interval):
+    # 1 get currency code of the stock
+
+    fx_rate_ticker = f"{from_currency}{to_currency}=X"
+    fx_rates = yf.download(fx_rate_ticker, period=period, interval=interval)
+    fx_rates["Ticker"] = fx_rate_ticker
+    fx_rates["From Currency"] = from_currency
+    fx_rates["To Currency"] = to_currency
+    fx_rates = fx_rates.reset_index()
+    output_columns = [
+        "Date",
+        "Ticker",
+        "From Currency",
+        "To Currency",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Adj Close",
+    ]
+
+    return fx_rates[output_columns]
+
+
 if __name__ == "__main__":
-    tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"]
+    res = get_exchange_rate2("USD", "GBP", "5d", "1d")
+    print(res)
+    # tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"]
+    # get_stock_history("AAPL", "5d")
+    # get_exchange_rate("SHOP.TO")
+    # get_stock_history("SHOP.TO", "5d")
+    # get_stock_history("TSCO.L", "5d")
     # get_major_shareholders("APPL")
     # get_news("APPL")

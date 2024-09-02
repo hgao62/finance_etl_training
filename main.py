@@ -1,7 +1,8 @@
+import logging  # 1. import logging
 from typing import List
+
 import extract_data
 import load_data
-import logging  # 1. import logging
 from load_data import DBType
 from transform_data import enrich_stock_history
 
@@ -32,39 +33,51 @@ def run_pipeline(
         interval,
         db_type,
     )
+    print(f" stock list type is: {type(tickers)}")
     if drop_existing_tables:
         load_data.drop_existing_tables(db_engine)
     for stock in tickers:
+        logger.info(f"Getting data for ticker {stock}")
         stock_history = extract_data.get_stock_history(stock, period)
         stock_history = enrich_stock_history(stock_history)
         load_data.save_df_to_db(stock_history, "stock_history", engine=db_engine)
 
-        # news = extract_data.get_news(stock)
-        # load_data.save_df_to_db(news, "news", engine=db_engine)
-        # fx_rates = extract_data.get_exchange_rate(stock, interval, period)
-        # load_data.save_df_to_db(fx_rates, "exchange_rate", engine=db_engine)
+        news = extract_data.get_news(stock)
+        load_data.save_df_to_db(news, "news", engine=db_engine)
+        fx_rates = extract_data.get_exchange_rate(stock, interval, period)
+        load_data.save_df_to_db(fx_rates, "exchange_rate", engine=db_engine)
 
-        # load_data.save_df_to_db(stock_financials, "financials", engine=db_engine)
-        # stock_financials = extract_data.get_stock_financials(stock)
+        stock_financials = extract_data.get_stock_financials(stock)
+        load_data.save_df_to_db(stock_financials, "financials", engine=db_engine)
 
     logger.info("Process finished successfully")
 
 
 if __name__ == "__main__":
     tickers = [
-        # "AAPL",
-        # "MSFT",
-        # "GOOGL",
-        # "AMZN",
-        # "TSLA",
-        "SPY",
+        "AAPL",
+        "MSFT",
+        "GOOGL",
+        "AMZN",
+        "TSLA",
+        # "SPY",
         "COST",
         "WMT",
-        "TGT",
+        "VZ",
+        "OKE",
+        "GS",
+        "JPM",
+        "PFE",
+        "JNJ",
+        "BA",
+        "LMT",
+        "EQIX",
+        "FE",
         "AMC",
-        "NIKE",
+        # "NIKE",
     ]
-
-    tickers = ["AAPL"]
-    period = "5d"
-    run_pipeline(tickers, period=period, db_type="mysql")
+    # SECTOR ticker example https://www.sectorspdrs.com/sectortracker
+    tickers = ["AAPL", "AMZN", "COST"]
+    period = "1y"
+    # tickers = ["AAPL", "Meta"]
+    run_pipeline(tickers, period=period, db_type="mysql", drop_existing_tables=True)

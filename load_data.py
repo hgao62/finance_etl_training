@@ -1,13 +1,14 @@
-import sqlite3
-from sqlalchemy import create_engine
-import sqlalchemy
 import logging
+import sqlite3
 from enum import Enum
-
 from getpass import getpass
-from mysql.connector import connect, Error
-from config import ENV
+
 import pandas as pd
+import sqlalchemy
+from mysql.connector import Error, connect
+from sqlalchemy import create_engine
+
+from config import ENV
 
 
 class DBType(Enum):
@@ -51,6 +52,7 @@ def save_df_to_db(
         None. This function logs a note in the log file to confirm that data has been sent to the SQL database.
     """
     df["write_time"] = pd.Timestamp.now()
+    logger.info(f"Connection detail is: {engine}")
     try:
         df.to_sql(table_name, engine, if_exists=if_exists, index=False, dtype=dtype)
     except Exception as e:
