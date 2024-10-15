@@ -1,4 +1,4 @@
-version: '3'
+version: '3' # Specify the version of Docker Compose
 services:
   mysql:
     image: mysql:5.7 # Use the MySQL 5.7 image
@@ -13,21 +13,24 @@ services:
       - mysql-db-volume:/var/lib/mysql # Mount the MySQL data volume
     command: mysqld --sql_mode="ALLOW_INVALID_DATES"
 
+
 # Define the Airflow webserver service
-  airflow_webserver:
- # Build the Docker image using the Dockerfile in the current directory
+  etl:
+  # Build the Docker image using the Dockerfile in the current directory
    build:
    # Use the current directory as the build
      context: .
      # Specify the Dockerfile to use for the build
      dockerfile: Dockerfile
-   
-   ports:
-     - "8080:8070"  # Map the container port 8080 to the host port 8070
-   # Define the command to run when the container starts
-   entrypoint: ./entrypoint.sh
+  
 
+# volumes:
+#   mysql-db-volume: # Define the MySQL data volume
 volumes:
   mysql-db-volume: # Define the MySQL data volume
 
 
+
+  # useful linux command
+  1. find process
+  ps aux | grep redis

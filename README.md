@@ -122,7 +122,13 @@ df.to_sql() #4. final step of saving dataframe to db, see pandas documents on ho
 3. install sqlite studio from link below
 https://github.com/pawelsalawa/sqlitestudio/releases
 
+
 ### Task 4
+1. Now we have our stock historical price, but we need to know what currency it represents. So
+add 
+ 
+
+### Task 5
 
 1. add logging to your project and add different type of logs wherever applicable
 https://realpython.com/python-logging/
@@ -149,7 +155,11 @@ https://www.youtube.com/watch?v=u96rVINbAUI
 for mac user, you need to run brew install mysql pkg-config
 https://stackoverflow.com/questions/66669728/trouble-installing-mysql-client-on-mac
 
-### Task 5 dockerize your project and set up airflow
+### Task 6 dockerize your project and set up airflow
+
+hands-on tutorial created by myself
+https://github.com/hgao62/docker_tutorial
+
 
 docker tutorials- How To Containerize Python Applications
 https://www.youtube.com/watch?v=bi0cKgmRuiA
@@ -157,7 +167,7 @@ https://www.youtube.com/watch?v=bi0cKgmRuiA
 docker  compose tutorial
 https://www.youtube.com/watch?v=HG6yIjZapSA&t=1598s
 
-apache airflow in one hour
+apache airflow in half an hour(only need to watch first 4 videos)
 https://www.youtube.com/watch?v=s6PgXq-SO4I&list=PLc2EZr8W2QIAI0cS1nZGNxoLzppb7XbqM
 
 ## How to set up airflow
