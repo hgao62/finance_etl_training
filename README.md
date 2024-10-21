@@ -46,25 +46,27 @@ When creating functions, please add type hinting and doc string like below
 
 
 ### Task 2
+1. add function get_exchange_rate(see below) to extract_data.py
 ```python
-1. add function below to extract_data.py
-def get_exchange_rate(stock, period, interval, to_currency):
-    # 1 get currency code of the stock
-    ticker = yf.Ticker(stock)
-    currency_code = ticker.fast_info["currency"]
-    fx_rate_ticker = f'{currency_code}{to_currency}=X'
-    fx_rates = yf.download(fx_rate_ticker,period=period, interval=interval)
 
+def get_exchange_rate(from_currency, to_currency, interval):
 
-get_exchange_rate("AAPL", period="5d", interval="1d", "GBP")
 
 ```
 and output should look like below
 
 <img alt="stock financial" src="./docs/exchange_rate.png" width="1000">
 
+2. add a function called get_stock_currency_code so that we know what currency this stock belongs to
 ```python
-2. add function below to extract_data.py
+
+def get_stock_currency_code(stock):
+    #hint look attribute in fast_info property
+
+```
+3. add function below to extract_data.py
+```python
+
 def get_news(stock):
 ```
 and output should look like below
@@ -73,7 +75,7 @@ and output should look like below
 
 
 ### Task 3
-1. creat function as below
+1. creat function called enrich_stock_history(see below) and put it into transform_data.py
 ```python
 def enrich_stock_history(stock_history:pd.DataFrame):
     """

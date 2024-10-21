@@ -60,7 +60,6 @@ def get_stock_history(stock, period="1d"):
             "sector",
         ]
     ]
-    stock
     return stock_history
 
 
@@ -147,6 +146,7 @@ def get_news(stock):
     return news_df
 
 
+
 def get_exchange_rate(stock, interval="1d", period="1d"):
     currency_code = {}
 
@@ -222,7 +222,7 @@ def get_exchange_rate2(from_currency, to_currency, period, interval):
         "Date",
         "Ticker",
         "From Currency",
-        "To Currency",
+        "To Currency",  
         "Open",
         "High",
         "Low",
@@ -234,7 +234,8 @@ def get_exchange_rate2(from_currency, to_currency, period, interval):
 
 
 if __name__ == "__main__":
-    res = get_exchange_rate2("USD", "GBP", "5d", "1d")
+    # res = get_exchange_rate2("USD", "GBP", "5d", "1d")
+    res = get_stock_history("SHOP.TO", "5d")
     print(res)
     # tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"]
     # get_stock_history("AAPL", "5d")

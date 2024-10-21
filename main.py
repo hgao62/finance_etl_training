@@ -5,7 +5,7 @@ import extract_data
 import load_data
 from load_data import DBType
 from transform_data import enrich_stock_history
-
+import pandas as pd
 # 2. Add logging configuration
 logging.basicConfig(
     filemode="a",
