@@ -4,7 +4,7 @@ from typing import List
 import extract_data
 import load_data
 from load_data import DBType
-from transform_data import enrich_stock_history
+from transform_data import add_stock_returns,standardize_price_to_usd
 import pandas as pd
 # 2. Add logging configuration
 logging.basicConfig(
@@ -39,7 +39,8 @@ def run_pipeline(
     for stock in tickers:
         logger.info(f"Getting data for ticker {stock}")
         stock_history = extract_data.get_stock_history(stock, period)
-        stock_history = enrich_stock_history(stock_history)
+        stock_history = add_stock_returns(stock_history)
+        stock_history = standardize_price_to_usd(stock_history)
         load_data.save_df_to_db(stock_history, "stock_history", engine=db_engine)
 
         news = extract_data.get_news(stock)
@@ -78,6 +79,7 @@ if __name__ == "__main__":
     ]
     # SECTOR ticker example https://www.sectorspdrs.com/sectortracker
     tickers = ["AAPL", "AMZN", "COST"]
-    period = "1y"
+    tickers = ["SHOP.TO"]
+    period = "5d"
     # tickers = ["AAPL", "Meta"]
     run_pipeline(tickers, period=period, db_type="mysql", drop_existing_tables=True)

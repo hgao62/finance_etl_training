@@ -26,27 +26,30 @@ def get_stock_history(stock, period="1d"):
     """
     ticker = yf.Ticker(stock)
     sector = ticker.info["sector"]
+    currency_code = ticker.fast_info["currency"]
     stock_history = ticker.history(period=period).reset_index()
     logging.info(f"stock_history dataframe downloaded: {stock_history}")
     if stock_history.empty:
         return pd.DataFrame(
             [],
             columns=[
-                "date",
-                "open",
-                "high",
-                "low",
-                "close",
-                "volume",
-                "dividends",
-                "stock",
+            "date",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "dividends",
+            "stock",
+            "sector",
+            "currency_code"
             ],
         )
     stock_history = stock_history.rename(str.lower, axis="columns")
     stock_history["stock"] = stock
     stock_history["date"] = pd.to_datetime(stock_history["date"])
     stock_history["sector"] = sector
-
+    stock_history["currency_code"] =  currency_code
     stock_history = stock_history[
         [
             "date",
@@ -58,6 +61,7 @@ def get_stock_history(stock, period="1d"):
             "dividends",
             "stock",
             "sector",
+            "currency_code"
         ]
     ]
     return stock_history
@@ -145,51 +149,20 @@ def get_news(stock):
 
     return news_df
 
+def get_stock_currency_code(stock: str) -> str:
+    """this function should retrieve currency this stock belongs to
 
+    Args:
+        stock (str): stock ticker symbol
 
-def get_exchange_rate(stock, interval="1d", period="1d"):
-    currency_code = {}
-
+    Returns:
+        pd.DataFrame: trading currency code of the stock
+    """
     ticker = yf.Ticker(stock)
-    try:
-        currency_code = ticker.fast_info["currency"]
-    except KeyError:
-        return pd.DataFrame(
-            [],
-            columns=[
-                "Date",
-                "Open",
-                "Currenyc Close",
-                "Low",
-                "High",
-                "Fromcurrency",
-                "Tocurrency",
-                "Exchange Id",
-                "Currency Date key",
-                "Ticker",
-                "Currency Code",
-            ],
-        )
+    currency_code = ticker.fast_info["currency"]
+    return currency_code
+    
 
-    to_currency = FX_RATES_CURRENY_MAP.get(currency_code.upper(), "USD")
-    fx_rate_ticker = f"{currency_code}{to_currency}=X"
-    fx_rates = yf.download(fx_rate_ticker, period=period, interval=interval)
-    logging.info(f"exchange rate dataframe downloaded: {fx_rates}")
-    fx_rates = fx_rates[["Open", "Close", "Low", "High"]]
-    fx_rates.reset_index(inplace=True)
-    fx_rates["Fromcurrency"] = currency_code
-    fx_rates["Tocurrency"] = to_currency
-    fx_rates["Exchange Id"] = fx_rates["Date"].dt.strftime("%m%d%Y") + (
-        fx_rates["Fromcurrency"]
-    )
-    fx_rates["Currency Date key"] = fx_rates["Date"].dt.strftime("%m%d%Y")
-
-    # rename columns
-    fx_rates["Ticker"] = stock
-    fx_rates["Currency Code"] = to_currency
-    fx_rates.rename(columns={"Close": "Currency Close"}, inplace=True)
-
-    return fx_rates
 
 
 def clean_stock_history(stock_history):
@@ -209,7 +182,7 @@ def clean_stock_history(stock_history):
     return stock_history
 
 
-def get_exchange_rate2(from_currency, to_currency, period, interval):
+def get_exchange_rate(from_currency, to_currency, period, interval)->pd.DataFrame:
     # 1 get currency code of the stock
 
     fx_rate_ticker = f"{from_currency}{to_currency}=X"

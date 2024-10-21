@@ -50,12 +50,12 @@ When creating functions, please add type hinting and doc string like below
 ```python
 
 def get_exchange_rate(from_currency, to_currency, interval):
+    # i provided following two lines for you to get started
+    fx_rate_ticker = f"{from_currency}{to_currency}=X"
+    fx_rates = yf.download(fx_rate_ticker, period=period, interval=interval)
 
 
 ```
-and output should look like below
-
-<img alt="stock financial" src="./docs/exchange_rate.png" width="1000">
 
 2. add a function called get_stock_currency_code so that we know what currency this stock belongs to
 ```python
@@ -73,11 +73,18 @@ and output should look like below
 
 <img alt="stock financial" src="./docs/news.png" width="1000">
 
+4. Add a new python file called transform_data.py and it should round open, high, low, close columns to 2 decimal places
+and rename data column to trade_data
+```Python
+def normalize_stock_data(stock_history: pd.DataFrame) -> pd.DataFrame:
+
+```
+
 
 ### Task 3
-1. creat function called enrich_stock_history(see below) and put it into transform_data.py
+1. creat function called add_stock_returns(see below) and put it into transform_data.py
 ```python
-def enrich_stock_history(stock_history:pd.DataFrame):
+def add_stock_returns(stock_history:pd.DataFrame):
     """
     This function adds two columns to stock_history data frame
         a. "daily_return": this is caluclated using the "close" price column, google "how to calcualte daily return pandas"
@@ -87,7 +94,23 @@ def enrich_stock_history(stock_history:pd.DataFrame):
     return stock_history
 
 ```
-2. create load_data.py file and create function inside like below that save dataframe to sqlite db
+2. The stock price we get is denominated in local currency and we want to convert it to USD, in order to achieve this, we need
+   2.1 add a new column called currency_code(use the function get_stock_currency_code created from task 2 ) to stock history data frame in our get_stock_history function
+   2.1 add new function called standardize_price_to_usd like below, this function should first get the fx rate from whatever local currency to usd and then apply it to existing close price column to get a usd_close price column
+
+
+   note: you can use "SHOP.TO" to test it's the canadian stock ticker for canadian company called SHOPIFY, it should return canadian stock price when we our get_stock_history function runs and we need to get CAD/USD fx rate and convert CAD price 
+   to USD price
+
+```python
+   def standardize_price_to_usd(stock_history):
+
+
+```
+
+<img alt="stock financial" src="./docs/usd_close.png" width="1000">
+
+3. create load_data.py file and create function inside like below that save dataframe to sqlite db
      
 ```python
  def save_df_to_db(
@@ -125,12 +148,8 @@ df.to_sql() #4. final step of saving dataframe to db, see pandas documents on ho
 https://github.com/pawelsalawa/sqlitestudio/releases
 
 
-### Task 4
-1. Now we have our stock historical price, but we need to know what currency it represents. So
-add 
- 
 
-### Task 5
+### Task 4
 
 1. add logging to your project and add different type of logs wherever applicable
 https://realpython.com/python-logging/
@@ -157,7 +176,7 @@ https://www.youtube.com/watch?v=u96rVINbAUI
 for mac user, you need to run brew install mysql pkg-config
 https://stackoverflow.com/questions/66669728/trouble-installing-mysql-client-on-mac
 
-### Task 6 dockerize your project and set up airflow
+### Task 5 dockerize your project and set up airflow
 
 hands-on tutorial created by myself
 https://github.com/hgao62/docker_tutorial
@@ -172,7 +191,7 @@ https://www.youtube.com/watch?v=HG6yIjZapSA&t=1598s
 apache airflow in half an hour(only need to watch first 4 videos)
 https://www.youtube.com/watch?v=s6PgXq-SO4I&list=PLc2EZr8W2QIAI0cS1nZGNxoLzppb7XbqM
 
-## How to set up airflow
+## Task 6 How to set up airflow
 #### 1. build image and create a container based on the image just  created
 ```docker
   docker-compose up --build
