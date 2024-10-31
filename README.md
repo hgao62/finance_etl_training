@@ -235,3 +235,7 @@ https://stackoverflow.com/questions/44785585/how-can-i-delete-all-local-docker-i
 ```
 docker images -a -q | % { docker image rm $_ -f }
 ```
+
+
+future enhancement amazon managed apache airflow
+https://www.youtube.com/watch?v=jky0q1rLfPE
