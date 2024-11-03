@@ -46,27 +46,30 @@ When creating functions, please add type hinting and doc string like below
 
 
 ### Task 2
-1. add function get_exchange_rate(see below) to extract_data.py
 ```python
-
+1. add a function called get_exchange_rate to extract_data.py so it can download fx rate for us
 def get_exchange_rate(from_currency, to_currency, interval):
-    # i provided following two lines for you to get started
     fx_rate_ticker = f"{from_currency}{to_currency}=X"
     fx_rates = yf.download(fx_rate_ticker, period=period, interval=interval)
 
 
 ```
+and output should look like below
 
-2. add a function called get_stock_currency_code so that we know what currency this stock belongs to
+<img alt="stock financial" src="./docs/exchange_rate.png" width="1000">
+
+
 ```python
-
+2. add a function called get_stock_currency_code so that we know what currency this stock belongs to
 def get_stock_currency_code(stock):
     #hint look attribute in fast_info property
 
 ```
-3. add function below to extract_data.py
+
 ```python
 
+
+3. add function called get_news to extract_data.py so we can get relevant news belongs to that company
 def get_news(stock):
 ```
 and output should look like below
@@ -82,7 +85,7 @@ def normalize_stock_data(stock_history: pd.DataFrame) -> pd.DataFrame:
 
 
 ### Task 3
-1. creat function called add_stock_returns(see below) and put it into transform_data.py
+1. creat function as below to transform data.py
 ```python
 def add_stock_returns(stock_history:pd.DataFrame):
     """
@@ -91,7 +94,6 @@ def add_stock_returns(stock_history:pd.DataFrame):
         b. "cummulative_return": this is caculated using the "daily_return" caculated from step above(see stackoverflow below)
         https://stackoverflow.com/questions/35365545/calculating-cumulative-returns-with-pandas-dataframe
     """
-    return stock_history
 
 ```
 2. The stock price we get is denominated in local currency and we want to convert it to USD, in order to achieve this, we need
@@ -105,16 +107,38 @@ def add_stock_returns(stock_history:pd.DataFrame):
 ```python
    def standardize_price_to_usd(stock_history):
 
+```
+<img alt="stock financial" src="./docs/usd_close.png" width="1000">
+
+3. finish calculate_moving_average function so it calculate the moving average of stock close price 
+```python
+
+def calculate_moving_average(stock_history: pd.DataFrame, window: int = 5) ->pd.DataFrame:
+   
+```
+
+4. finish get_top_bottom_days function below so it returns stock history data with top n days and bottom n days
+
+```python
+def get_top_bottom_days(stock_history: pd.DataFrame, n: int =5) -> pd.DataFrame:
+
+   
+```
+5. finish group_by_sector function below so it calculates the average stock close price and volume by each sector
+
+```python
+def group_by_sector(stock_history: pd.DataFrame) -> pd.DataFrame:
+
 
 ```
 
-<img alt="stock financial" src="./docs/usd_close.png" width="1000">
 
-3. create load_data.py file and create function inside like below that save dataframe to sqlite db
+### Task 4 
+1. create load_data.py file and create function inside like below that save dataframe to mysql db
      
 ```python
  def save_df_to_db(
-    df, table_name,  engine, if_exists="append", dtype=None,
+    df, table_name, if_exists="append", dtype=None,
 ) -> None:
     """
     Function to send a dataframe to SQL database.
@@ -122,7 +146,6 @@ def add_stock_returns(stock_history:pd.DataFrame):
     Args:
         df: DataFrame to be sent to the SQL database.
         table_name: Name of the table in the SQL database.
-        engine: db engine type, in our project, this could be sqlite or mysql
         if_exists: Action to take if the table already exists in the SQL database.
                    Options: "fail", "replace", "append" (default: "append").
         dtype: Dictionary of column names and data types to be used when creating the table (default: None).
@@ -133,23 +156,38 @@ def add_stock_returns(stock_history:pd.DataFrame):
     """
 ```
 
-instructions on how to connect to sqlite using python
-
+some helpful code snippet
 ```python
 
-import sqlite3 #1. import sqlite library(used to interact with sqlite)
-from sqlalchemy import create_engine #2. import sqlalchemy library(used for interact with db using pandas)
-ENGINE = create_engine(f"sqlite:///<path on your local drive>.db") #3. create engine
+from sqlalchemy import create_engine #1. import sqlalchemy library(used for interact with db using pandas)
+ENGINE = create_engine(f"mysql+mysqlconnector://<user_name>:<pass_word>@localhost/<db_name>") #2. create engine
 df.to_sql() #4. final step of saving dataframe to db, see pandas documents on how to pass the requried parameterss
 # https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_sql.html
+```
+see video below to setup mysql
+https://www.youtube.com/watch?v=u96rVINbAUI
+
+for mac user, you need to run brew install mysql pkg-config
+https://stackoverflow.com/questions/66669728/trouble-installing-mysql-client-on-mac
+
+
+2. now we have our functions in extract_data.py, transform_data.py, load_data.py. it's time to connect them together in main.py module
+please add this run_pipeline function to main.py so that it takes a list of tickers to do following things:
+ - 2.1 it downloading data from yaohoo finance api by calling get_stock_history,get_stock_financials, get_news
+ - 2.2 enrich stock history data using add_stock_returns, standardize_price_to_usd, normalize_stock_data, calculate_moving_average
+ - 2.3 saved enriched stock history, news data, financial data to "stock_history" , "news", "financial" tables  in mysql database respectively
+
+```python 
+def run_pipeline(
+    tickers: List[str],
+    period: str = "1d",
+    interval: str = "1d",
+):
 
 ```
-3. install sqlite studio from link below
-https://github.com/pawelsalawa/sqlitestudio/releases
 
 
-
-### Task 4
+### Task 5
 
 1. add logging to your project and add different type of logs wherever applicable
 https://realpython.com/python-logging/
@@ -160,23 +198,12 @@ import logging
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 logging.info('Admin logged in')
 ```
-2. add unit testing(use pytest, see youtube video below) for 2 functions one for get_stock_history and one for get_news
+2. add unit testing(use pytest, see youtube video below) for 2 functions one for add_stock_returns and one for normalize_stock_data
 https://www.youtube.com/watch?v=cHYq1MRoyI0&t=716s
 
-3. set up mysql engine and call your project below and you should see data loaded into mysql database
-   similar to how you set sqlite db. just change the connection string
-```python
-    tickers = ["AAPL"]
-    period = "5d"
-    main(tickers, period=period, db_type="mysql")
-```
-see video below to setup mysql
-https://www.youtube.com/watch?v=u96rVINbAUI
 
-for mac user, you need to run brew install mysql pkg-config
-https://stackoverflow.com/questions/66669728/trouble-installing-mysql-client-on-mac
 
-### Task 5 dockerize your project and set up airflow
+### Task 6 dockerize your project and set up airflow tutorial
 
 hands-on tutorial created by myself
 https://github.com/hgao62/docker_tutorial
@@ -191,7 +218,7 @@ https://www.youtube.com/watch?v=HG6yIjZapSA&t=1598s
 apache airflow in half an hour(only need to watch first 4 videos)
 https://www.youtube.com/watch?v=s6PgXq-SO4I&list=PLc2EZr8W2QIAI0cS1nZGNxoLzppb7XbqM
 
-## Task 6 How to set up airflow
+## Task 7 How to set up airflow
 #### 1. build image and create a container based on the image just  created
 ```docker
   docker-compose up --build
@@ -239,3 +266,7 @@ docker images -a -q | % { docker image rm $_ -f }
 
 future enhancement amazon managed apache airflow
 https://www.youtube.com/watch?v=jky0q1rLfPE
+
+
+#1. add pytest to requirements.txt
+#2. add task to connect main.py with etl modules
