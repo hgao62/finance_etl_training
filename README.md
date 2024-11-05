@@ -1,17 +1,26 @@
-# vera_project
+# Pprerequisite
+- 1 python 3.7.9:https://www.python.org/downloads/release/python-379/
+- 2 github account:https://github.com/
+- 3 visual studio code: https://code.visualstudio.com/download
+- 4 download obs for video recording: https://obsproject.com/
 
 ## Github repo
 https://github.com/hgao62/vera_project.git
 ### Task 1
-* 1. create main.py, extract_data.py, load_data.py
-* 2. create requirments.txt file that has contents below
+* 1. create main.py, extract_data.py, load_data.py, transform.py
+* 2. create requirements.txt file that has contents below
 ```
 SQLAlchemy==1.4.52
 yfinance==0.2.37
 pandas>=1.3.0
+numpy>=1.21.0
 ```
-* 3. run pip install -r requirements.txt
-* 4. create two functions in extrac_data.py see below
+* 3. create virtual environment by running python -m venv venv
+* 4. activate virtual environment by running venv\scripts\activate
+* 4. run pip install -r requirements.txt
+* 5. familiar yourself with  use yahoo finance api by looking at example here
+    [Yahoo finance api example file](./samples/yahoo_finance_api_usage_example.py)
+* 6. create two functions in extrac_data.py see below
 
 ```python
 def get_stock_history(stock):
@@ -29,10 +38,35 @@ it should return a data frame like this below
 
 ```python
 def get_stock_financials(stock):
-    '''this function should get share holders of a stock given a stock input,
+    '''this function should get share holders of a stock given a stock input, it should have 
+       following output columns
        please follow this link to get example on how to use yahoo finance api
        https://github.com/ranaroussi/yfinance
     '''
+
+    output_columns = [
+        "date",
+        "Tax Effect Of Unusual Items",
+        "Tax Rate For Calcs",
+        "Normalized EBITDA",
+        "Net Income From Continuing Operation Net Minority Interest",
+        "Reconciled Depreciation",
+        "Reconciled Cost Of Revenue",
+        "EBITDA",
+        "EBIT",
+        "Net Interest Income",
+        "Interest Expense",
+        "Interest Income",
+        "Normalized Income",
+        "Net Income From Continuing And Discontinued Operation",
+        "Total Expenses",
+        "Total Operating Income As Reported",
+        "Diluted Average Shares",
+        "Basic Average Shares",
+        "Diluted EPS",
+        "Basic EPS",
+       
+    ]
 
 ```
 it should return a data frame like this below
@@ -198,7 +232,7 @@ import logging
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 logging.info('Admin logged in')
 ```
-2. add unit testing(use pytest, see youtube video below) for 2 functions one for add_stock_returns and one for normalize_stock_data
+2. add unit testing(use pytest, see youtube video below) for 3 functions one for add_stock_returns and one for normalize_stock_data and one for calculate_moving_average
 https://www.youtube.com/watch?v=cHYq1MRoyI0&t=716s
 
 
