@@ -14,7 +14,7 @@ FX_RATES_CURRENY_MAP = {
 }
 
 
-def get_stock_history(stock, period="1d"):
+def get_stock_history(stock, period="1d") -> str:
     """
     Function to pull historical stock data for a given stock.
 
@@ -120,13 +120,36 @@ def get_stock_financials(stock):
         "Operating Revenue",
         "stock",
     ]
+    output_columns = [
+        "date",
+        "Tax Effect Of Unusual Items",
+        "Tax Rate For Calcs",
+        "Normalized EBITDA",
+        "Net Income From Continuing Operation Net Minority Interest",
+        "Reconciled Depreciation",
+        "Reconciled Cost Of Revenue",
+        "EBITDA",
+        "EBIT",
+        "Net Interest Income",
+        "Interest Expense",
+        "Interest Income",
+        "Normalized Income",
+        "Net Income From Continuing And Discontinued Operation",
+        "Total Expenses",
+        "Total Operating Income As Reported",
+        "Diluted Average Shares",
+        "Basic Average Shares",
+        "Diluted EPS",
+        "Basic EPS",
+       
+    ]
     ticker = yf.Ticker(stock)
     stock_financials = ticker.financials.transpose().reset_index()
     logging.info(f"stock financials dataframe downloaded: {stock_financials}")
     stock_financials.columns.values[0] = "date"
     stock_financials["stock"] = stock
-    output_columns = []
-    output_columns = stock_financials.columns.intersection(columns)
+    # output_columns = []
+    # output_columns = stock_financials.columns.intersection(columns)
     return stock_financials[output_columns]
 
 
@@ -191,10 +214,7 @@ def get_exchange_rate(from_currency, to_currency, period, interval)->pd.DataFram
     fx_rates["From Currency"] = from_currency
     fx_rates["To Currency"] = to_currency
     fx_rates = fx_rates.reset_index()
-    output_columns = [
-        "Date",
-        "Ticker",
-        "From Currency",
+    output_columns = [ "Date","Ticker","From Currency",
         "To Currency",  
         "Open",
         "High",
@@ -208,8 +228,33 @@ def get_exchange_rate(from_currency, to_currency, period, interval)->pd.DataFram
 
 if __name__ == "__main__":
     # res = get_exchange_rate2("USD", "GBP", "5d", "1d")
+    # stock_history: pd.DataFrame = get_stock_history("goog", "5d")
     res = get_stock_history("SHOP.TO", "5d")
-    print(res)
+    tickers = [
+        "AAPL",
+        "MSFT",
+        "GOOGL",
+        "AMZN",
+        "TSLA",
+        # "SPY",
+        "COST",
+        "WMT",
+        "VZ",
+        "OKE",
+        "GS",
+        "JPM",
+        "PFE",
+        "JNJ",
+        "BA",
+        "LMT",
+        "EQIX",
+        "FE",
+        "AMC",
+        # "NIKE",
+    ]
+    for ticker in tickers:
+        financial = get_stock_financials('SHOP.TO')
+        print(financial)
     # tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"]
     # get_stock_history("AAPL", "5d")
     # get_exchange_rate("SHOP.TO")

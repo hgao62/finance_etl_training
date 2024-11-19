@@ -304,3 +304,4 @@ https://www.youtube.com/watch?v=jky0q1rLfPE
 
 #1. add pytest to requirements.txt
 #2. add task to connect main.py with etl modules
+#3. add Enum instructions

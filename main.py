@@ -1,3 +1,4 @@
+"""Project entry file"""
 import logging  # 1. import logging
 from typing import List
 
@@ -5,7 +6,6 @@ import extract_data
 import load_data
 from load_data import DBType
 from transform_data import add_stock_returns,standardize_price_to_usd
-import pandas as pd
 # 2. Add logging configuration
 logging.basicConfig(
     filemode="a",
@@ -17,7 +17,7 @@ logging.basicConfig(
 # 3. Create a logger object
 logger = logging.getLogger(__name__)
 
-
+import pandas as pd
 def run_pipeline(
     tickers: List[str],
     period: str = "1d",
@@ -37,22 +37,26 @@ def run_pipeline(
     if drop_existing_tables:
         load_data.drop_existing_tables(db_engine)
     for stock in tickers:
-        logger.info(f"Getting data for ticker {stock}")
-        stock_history = extract_data.get_stock_history(stock, period)
+        logger.info("Getting data for ticker %s",stock)
+        stock_history: pd.DataFrame = extract_data.get_stock_history(stock, period)
         stock_history = add_stock_returns(stock_history)
         stock_history = standardize_price_to_usd(stock_history)
         load_data.save_df_to_db(stock_history, "stock_history", engine=db_engine)
 
         news = extract_data.get_news(stock)
         load_data.save_df_to_db(news, "news", engine=db_engine)
-        fx_rates = extract_data.get_exchange_rate(stock, interval, period)
-        load_data.save_df_to_db(fx_rates, "exchange_rate", engine=db_engine)
+        # fx_rates = extract_data.get_exchange_rate(stock, interval, period)
+        # load_data.save_df_to_db(fx_rates, "exchange_rate", engine=db_engine)
 
         stock_financials = extract_data.get_stock_financials(stock)
         load_data.save_df_to_db(stock_financials, "financials", engine=db_engine)
 
     logger.info("Process finished successfully")
 
+
+def return_data_frame() -> str:
+    data = [[1,2,3],[3,4,5],[6,7,8]]
+    return pd.DataFrame(data)
 
 if __name__ == "__main__":
     tickers = [
@@ -80,6 +84,6 @@ if __name__ == "__main__":
     # SECTOR ticker example https://www.sectorspdrs.com/sectortracker
     tickers = ["AAPL", "AMZN", "COST"]
     tickers = ["SHOP.TO"]
-    period = "5d"
+    PERIOD = "5d"
     # tickers = ["AAPL", "Meta"]
-    run_pipeline(tickers, period=period, db_type="mysql", drop_existing_tables=True)
+    run_pipeline(tickers, period=PERIOD, db_type="mysql", drop_existing_tables=True)

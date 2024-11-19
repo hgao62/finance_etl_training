@@ -17,9 +17,9 @@ class DBType(Enum):
 
 
 logger = logging.getLogger(__name__)
-DB_NAME = "stock_db"
-CONN = sqlite3.connect(f"./database/{DB_NAME}.db")
-ENGINE = create_engine(f"sqlite:///./database/{DB_NAME}.db", echo=True)
+# DB_NAME = "stock_db"
+# CONN = sqlite3.connect(f"./database/{DB_NAME}.db")
+# ENGINE = create_engine(f"sqlite:///./database/{DB_NAME}.db", echo=True)
 
 
 MYSQL_CONNECTION_STRING = (
@@ -27,12 +27,13 @@ MYSQL_CONNECTION_STRING = (
     if ENV == "PROD"
     else "mysql+mysqlconnector://airflow_user:airflow_pass@localhost/airflow_db"
 )
+# MYSQL_CONNECTION_STRING = "mysql://airflow_user:airflow_pass@mysql:3306/airflow_db"
 logger.info(f"My sql connection string used is:{MYSQL_CONNECTION_STRING}")
 print(MYSQL_CONNECTION_STRING)
 MYSQL_ENGINE = create_engine(MYSQL_CONNECTION_STRING)
+ENGINE = MYSQL_ENGINE
 
-
-DB_ENGINE_MAP = {DBType.SQLITE.value: ENGINE, DBType.MYSQL.value: MYSQL_ENGINE}
+DB_ENGINE_MAP = {DBType.SQLITE.value: None, DBType.MYSQL.value: MYSQL_ENGINE}
 
 
 def save_df_to_db(
