@@ -301,6 +301,9 @@ docker images -a -q | % { docker image rm $_ -f }
 future enhancement amazon managed apache airflow
 https://www.youtube.com/watch?v=jky0q1rLfPE
 
+### Connect Power BI with mysql
+https://www.youtube.com/watch?v=gvs_BYYoDOM
+
 
 #1. add pytest to requirements.txt
 #2. add task to connect main.py with etl modules

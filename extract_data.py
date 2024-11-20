@@ -120,36 +120,35 @@ def get_stock_financials(stock):
         "Operating Revenue",
         "stock",
     ]
-    output_columns = [
-        "date",
-        "Tax Effect Of Unusual Items",
-        "Tax Rate For Calcs",
-        "Normalized EBITDA",
-        "Net Income From Continuing Operation Net Minority Interest",
-        "Reconciled Depreciation",
-        "Reconciled Cost Of Revenue",
-        "EBITDA",
-        "EBIT",
-        "Net Interest Income",
-        "Interest Expense",
-        "Interest Income",
-        "Normalized Income",
-        "Net Income From Continuing And Discontinued Operation",
-        "Total Expenses",
-        "Total Operating Income As Reported",
-        "Diluted Average Shares",
-        "Basic Average Shares",
-        "Diluted EPS",
-        "Basic EPS",
+    # output_columns = [
+    #     "date",
+    #     "Tax Effect Of Unusual Items",
+    #     "Tax Rate For Calcs",
+    #     "Normalized EBITDA",
+    #     "Net Income From Continuing Operation Net Minority Interest",
+    #     "Reconciled Depreciation",
+    #     "Reconciled Cost Of Revenue",
+    #     "EBITDA",
+    #     "EBIT",
+    #     "Net Interest Income",
+    #     "Interest Expense",
+    #     "Normalized Income",
+    #     "Net Income From Continuing And Discontinued Operation",
+    #     "Total Expenses",
+    #     "Total Operating Income As Reported",
+    #     "Diluted Average Shares",
+    #     "Basic Average Shares",
+    #     "Diluted EPS",
+    #     "Basic EPS",
        
-    ]
+    # ]
     ticker = yf.Ticker(stock)
     stock_financials = ticker.financials.transpose().reset_index()
     logging.info(f"stock financials dataframe downloaded: {stock_financials}")
     stock_financials.columns.values[0] = "date"
     stock_financials["stock"] = stock
-    # output_columns = []
-    # output_columns = stock_financials.columns.intersection(columns)
+    output_columns = []
+    output_columns = stock_financials.columns.intersection(columns)
     return stock_financials[output_columns]
 
 

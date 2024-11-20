@@ -82,8 +82,8 @@ if __name__ == "__main__":
         # "NIKE",
     ]
     # SECTOR ticker example https://www.sectorspdrs.com/sectortracker
-    tickers = ["AAPL", "AMZN", "COST"]
-    tickers = ["SHOP.TO"]
-    PERIOD = "5d"
+    # tickers = ["AAPL", "AMZN", "COST"]
+    # tickers = ["SHOP.TO"]
+    PERIOD = "1mo"
     # tickers = ["AAPL", "Meta"]
     run_pipeline(tickers, period=PERIOD, db_type="mysql", drop_existing_tables=True)

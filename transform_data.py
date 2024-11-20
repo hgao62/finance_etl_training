@@ -31,7 +31,7 @@ def standardize_price_to_usd(stock_history:pd.DataFrame)-> pd.DataFrame:
         fx_rate = fx_rate_df.iloc[0]['Close']
         FX_RATE_CACHE[(stock_currency_code, "USD")] = fx_rate
         
-    stock_history["usd_close"] = stock_history["close"] * fx_rate,
+    stock_history["usd_close"] = stock_history["close"] * fx_rate
     return stock_history
     
 
