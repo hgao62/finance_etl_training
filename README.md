@@ -23,7 +23,7 @@ numpy>=1.21.0
 * 6. create two functions in extrac_data.py see below
 
 ```python
-def get_stock_history(stock):
+def get_stock_history(stock:str,period:str,interval:str)->pd.DataFrame:
     '''this function should pull stock history given a stock input,
        please follow this link to get example on how to use yahoo finance api
        https://github.com/ranaroussi/yfinance
@@ -37,7 +37,7 @@ it should return a data frame like this below
 <img alt="stock history" src="./docs/stock_history_output.png" width="1000">
 
 ```python
-def get_stock_financials(stock):
+def get_stock_financials(stock:str)->pd.DataFrame:
     '''this function should get share holders of a stock given a stock input, it should have 
        following output columns
        please follow this link to get example on how to use yahoo finance api
@@ -95,7 +95,7 @@ and output should look like below
 
 ```python
 2. add a function called get_stock_currency_code so that we know what currency this stock belongs to
-def get_stock_currency_code(stock):
+def get_stock_currency_code(stock:str)->str:
     #hint look attribute in fast_info property
 
 ```
@@ -104,7 +104,7 @@ def get_stock_currency_code(stock):
 
 
 3. add function called get_news to extract_data.py so we can get relevant news belongs to that company
-def get_news(stock):
+def get_news(stock:str)->str:
 ```
 and output should look like below
 
@@ -121,7 +121,7 @@ def normalize_stock_data(stock_history: pd.DataFrame) -> pd.DataFrame:
 ### Task 3
 1. creat function as below to transform data.py
 ```python
-def add_stock_returns(stock_history:pd.DataFrame):
+def add_stock_returns(stock_history:pd.DataFrame)->pd.DataFrame:
     """
     This function adds two columns to stock_history data frame
         a. "daily_return": this is caluclated using the "close" price column, google "how to calcualte daily return pandas"
@@ -139,7 +139,7 @@ def add_stock_returns(stock_history:pd.DataFrame):
    to USD price
 
 ```python
-   def standardize_price_to_usd(stock_history):
+   def standardize_price_to_usd(stock_history:pd.DataFrame)->pd.DataFrame:
 
 ```
 <img alt="stock financial" src="./docs/usd_close.png" width="1000">
@@ -216,7 +216,7 @@ def run_pipeline(
     tickers: List[str],
     period: str = "1d",
     interval: str = "1d",
-):
+)->None:
 
 ```
 
@@ -304,6 +304,8 @@ https://www.youtube.com/watch?v=jky0q1rLfPE
 ### Connect Power BI with mysql
 https://www.youtube.com/watch?v=gvs_BYYoDOM
 
+### Connect Tableau with mysql
+https://www.youtube.com/watch?v=aCVp5vEDNMM&t=212s
 
 #1. add pytest to requirements.txt
 #2. add task to connect main.py with etl modules
