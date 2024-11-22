@@ -226,7 +226,7 @@ https://www.youtube.com/watch?v=cHYq1MRoyI0&t=716s
 
 
 
-### Task 6 dockerize your project and set up airflow tutorial
+### Task 6 dockerize your project
 
 hands-on tutorial created by myself
 https://github.com/hgao62/docker_tutorial
@@ -238,10 +238,67 @@ https://www.youtube.com/watch?v=bi0cKgmRuiA
 docker  compose tutorial
 https://www.youtube.com/watch?v=HG6yIjZapSA&t=1598s
 
+
+## Task 7 How to set up airflow
+
 apache airflow in half an hour(only need to watch first 4 videos)
 https://www.youtube.com/watch?v=s6PgXq-SO4I&list=PLc2EZr8W2QIAI0cS1nZGNxoLzppb7XbqM
 
-## Task 7 How to set up airflow
+
+
+
+## Task 8 Deploy app to google cloud 
+youtube tutorial
+https://www.youtube.com/watch?v=7CvD6oHmYxU
+
+###First part push impage to docker hub ########
+
+1. login into docker hub
+https://hub.docker.com/repository/docker/kobegao/fastapi/general
+username：kobegao
+password:g7389010!
+
+2. build image
+2.1 docker build -t kobegao/fastapi:1.0.01(increase this yourself) .
+2.2 docker login
+2.3 docker push  kobegao/fastapi:1.0.0(push to docker hub)
+
+
+###First part push impage to docker hub ########
+
+
+
+
+####Second part configure cloud run ############
+3. go to google cloud run https://console.cloud.google.com/
+4. click "Create Service"
+
+need to set up billing payment and enable
+
+docker pull  kobegao/fastapi:1.0.0
+    2  docker login
+    3  docker pull  kobegao/fastapi:1.0.0
+    4  docker tag kobegao/fastapi:1.0.0 gcr.io/fast-api-project-399403/<image name>
+    5  docker push gcr.io/fast-api-project-399403
+    6  gcloud init
+    7  gcloud auth configure-docker
+    8  docker-credential-gcloud list
+    9  docker push gcr.io/fast-api-project
+   10  docker tag kobegao/fastapi:1.0.0 gcr.io/fast-api-project-399403do/fastapi-image-google
+   11  docker push gcr.io/fast-api-project-399403/fastapi-image-google
+
+kobegao/restaurant_dashboard
+
+docker push kobegao/restaurant_dashboard:1.0.1
+docker pull kobegao/restaurant_dashboard:1.0.1
+
+
+docker push kobegao/fastapi:1.0.1
+docker pull kobegao/fastapi:1.0.1
+
+####Second part configure cloud run ############
+
+
 #### 1. build image and create a container based on the image just  created
 ```docker
   docker-compose up --build
@@ -295,6 +352,15 @@ https://www.youtube.com/watch?v=gvs_BYYoDOM
 
 ### Connect Tableau with mysql
 https://www.youtube.com/watch?v=aCVp5vEDNMM&t=212s
+
+
+#########aws note####
+1. login into aws cli by typing aws in command line
+2. login using command C:\Users\hgao6>aws ecr get-login-password --region us-east-2 | docker login --username AWS  --password-stdin 847098449920.dkr.ecr.us-east-2.amazonaws.com
+(credientials is sotred in c:\users\hgao6\.aws\credentials
+docker pull  kobegao/fastapi:1.0.0
+3. docker tag kobegao/fastapi:1.0.1(image name)  847098449920.dkr.ecr.us-east-2.amazonaws.com/kobegao/restaurant_dashboard(source server name)
+4. docker push 847098449920.dkr.ecr.us-east-2.amazonaws.com/kobegao/restaruant_dashboard:latest
 
 #1. add pytest to requirements.txt
 #2. add task to connect main.py with etl modules
