@@ -120,35 +120,28 @@ def get_stock_financials(stock):
         "Operating Revenue",
         "stock",
     ]
-    # output_columns = [
-    #     "date",
-    #     "Tax Effect Of Unusual Items",
-    #     "Tax Rate For Calcs",
-    #     "Normalized EBITDA",
-    #     "Net Income From Continuing Operation Net Minority Interest",
-    #     "Reconciled Depreciation",
-    #     "Reconciled Cost Of Revenue",
-    #     "EBITDA",
-    #     "EBIT",
-    #     "Net Interest Income",
-    #     "Interest Expense",
-    #     "Normalized Income",
-    #     "Net Income From Continuing And Discontinued Operation",
-    #     "Total Expenses",
-    #     "Total Operating Income As Reported",
-    #     "Diluted Average Shares",
-    #     "Basic Average Shares",
-    #     "Diluted EPS",
-    #     "Basic EPS",
-       
-    # ]
+    output_columns = [
+        "Ticker",
+        "Date",
+        "Tax Effect Of Unusual Items",
+        "Tax Rate For Calcs",
+        "Normalized EBITDA",
+        "Net Income From Continuing Operation Net Minority Interest",
+        "Reconciled Depreciation",
+        "Reconciled Cost Of Revenue",
+        "EBITDA",
+        "EBIT"
+    ]
     ticker = yf.Ticker(stock)
     stock_financials = ticker.financials.transpose().reset_index()
     logging.info(f"stock financials dataframe downloaded: {stock_financials}")
-    stock_financials.columns.values[0] = "date"
-    stock_financials["stock"] = stock
-    output_columns = []
-    output_columns = stock_financials.columns.intersection(columns)
+    stock_financials.columns.values[0] = "Date"
+    stock_financials["Ticker"] = stock
+    # output_columns = []
+    # output_columns = stock_financials.columns.intersection(columns)
+    column_diff = set(output_columns) - set(stock_financials.columns)
+    if column_diff:
+        stock_financials[list(column_diff)] = 0
     return stock_financials[output_columns]
 
 
@@ -165,7 +158,6 @@ def get_news(stock):
     ticker = yf.Ticker(stock)
     news_list = ticker.news
     news_df = pd.DataFrame(news_list)
-    logging.info(f"news table dataframe downloaded: {news_df}")
     news_df["Ticker"] = stock
     news_df = news_df.drop(["thumbnail", "relatedTickers"], axis=1)
 

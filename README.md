@@ -45,7 +45,8 @@ def get_stock_financials(stock:str)->pd.DataFrame:
     '''
 
     output_columns = [
-        "date",
+        "Ticker",
+        "Date",
         "Tax Effect Of Unusual Items",
         "Tax Rate For Calcs",
         "Normalized EBITDA",
@@ -53,19 +54,7 @@ def get_stock_financials(stock:str)->pd.DataFrame:
         "Reconciled Depreciation",
         "Reconciled Cost Of Revenue",
         "EBITDA",
-        "EBIT",
-        "Net Interest Income",
-        "Interest Expense",
-        "Interest Income",
-        "Normalized Income",
-        "Net Income From Continuing And Discontinued Operation",
-        "Total Expenses",
-        "Total Operating Income As Reported",
-        "Diluted Average Shares",
-        "Basic Average Shares",
-        "Diluted EPS",
-        "Basic EPS",
-       
+        "EBIT"
     ]
 
 ```

@@ -36,6 +36,7 @@ def run_pipeline(
     print(f" stock list type is: {type(tickers)}")
     if drop_existing_tables:
         load_data.drop_existing_tables(db_engine)
+
     for stock in tickers:
         logger.info("Getting data for ticker %s",stock)
         stock_history: pd.DataFrame = extract_data.get_stock_history(stock, period)
@@ -50,7 +51,8 @@ def run_pipeline(
 
         stock_financials = extract_data.get_stock_financials(stock)
         load_data.save_df_to_db(stock_financials, "financials", engine=db_engine)
-
+   
+    
     logger.info("Process finished successfully")
 
 
@@ -84,6 +86,6 @@ if __name__ == "__main__":
     # SECTOR ticker example https://www.sectorspdrs.com/sectortracker
     # tickers = ["AAPL", "AMZN", "COST"]
     # tickers = ["SHOP.TO"]
-    PERIOD = "1mo"
+    PERIOD = "6mo"
     # tickers = ["AAPL", "Meta"]
     run_pipeline(tickers, period=PERIOD, db_type="mysql", drop_existing_tables=True)
