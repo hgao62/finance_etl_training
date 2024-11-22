@@ -21,11 +21,14 @@ services:
      context: .
      # Specify the Dockerfile to use for the build
      dockerfile: Dockerfile
-   
+   depends_on:
+    - mysql
    ports:
-     - "8080:8080"  # Map the host port 8080 to the container 8070
+     - "8080:8080"  # Map the host port 8080 to the container 8080
    # Define the command to run when the container starts
    entrypoint: ./entrypoint.sh
+   
+   
 
 volumes:
   mysql-db-volume: # Define the MySQL data volume
