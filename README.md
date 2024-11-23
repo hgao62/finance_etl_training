@@ -354,6 +354,11 @@ https://www.youtube.com/watch?v=gvs_BYYoDOM
 https://www.youtube.com/watch?v=aCVp5vEDNMM&t=212s
 
 
+#### complete the cd part 
+
+1. youtube tutorial
+https://www.youtube.com/watch?v=kZYsoav104w
+
 #########aws note####
 1. login into aws cli by typing aws in command line
 2. login using command C:\Users\hgao6>aws ecr get-login-password --region us-east-2 | docker login --username AWS  --password-stdin 847098449920.dkr.ecr.us-east-2.amazonaws.com
@@ -365,3 +370,19 @@ docker pull  kobegao/fastapi:1.0.0
 #1. add pytest to requirements.txt
 #2. add task to connect main.py with etl modules
 #3. add Enum instructions
+
+
+
+
+
+# how to set up github action continous deployment
+
+1. login into google cloud to get secret
+https://console.cloud.google.com/iam-admin/serviceaccounts/details/115521249260056891987/keys?inv=1&invt=AbiRNA&project=dashapp-399621
+![alt text](image.png)
+
+2. add secret to github
+https://github.com/hgao62/finance_etl_training/settings/secrets/actions
+![alt text](image-1.png)
+
+3. create github action
