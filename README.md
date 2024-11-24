@@ -262,7 +262,8 @@ password:g7389010!
 2.1 docker build -t kobegao/fastapi:1.0.01(increase this yourself) .
 2.2 docker login
 2.3 docker push  kobegao/fastapi:1.0.0(push to docker hub)
-
+3. tag image
+docker tag imagename
 
 ###First part push impage to docker hub ########
 
@@ -288,7 +289,7 @@ docker pull  kobegao/fastapi:1.0.0
    11  docker push gcr.io/fast-api-project-399403/fastapi-image-google
 
 kobegao/restaurant_dashboard
-
+aws
 docker push kobegao/restaurant_dashboard:1.0.1
 docker pull kobegao/restaurant_dashboard:1.0.1
 
@@ -380,9 +381,181 @@ docker pull  kobegao/fastapi:1.0.0
 1. login into google cloud to get secret
 https://console.cloud.google.com/iam-admin/serviceaccounts/details/115521249260056891987/keys?inv=1&invt=AbiRNA&project=dashapp-399621
 ![alt text](image.png)
+<img alt="stock financial" src="./docs/google_cloud_service_account.png" width="1000">
 
 2. add secret to github
 https://github.com/hgao62/finance_etl_training/settings/secrets/actions
-![alt text](image-1.png)
-
+<img alt="stock financial" src="./docs/image-1.png" width="1000">
 3. create github action
+
+aws ci/cd
+https://aws.amazon.com/blogs/containers/automated-software-delivery-using-docker-compose-and-amazon-ecs/
+
+
+
+
+
+1. Use AWS ECS (Elastic Container Service) with Docker Compose
+AWS supports deploying Docker Compose applications directly to Amazon ECS. This is the most seamless way to run Docker Compose applications on AWS.
+
+Steps to Deploy Compose Applications to ECS:
+Install the AWS CLI and Docker Compose CLI plugin:
+
+Ensure you have the AWS CLI installed.
+Install the Docker Compose CLI for ECS: Docker ECS CLI Plugin.
+Authenticate the AWS CLI:
+
+bash
+Copy code
+aws configure
+Provide your AWS access key, secret key, and region.
+
+Convert Compose File for ECS: If you have a docker-compose.yml file, you can deploy it directly to ECS with minimal changes.
+
+Deploy Your Application: Run the following command in the directory with your docker-compose.yml:
+
+bash
+Copy code
+docker compose up
+This will:
+
+Create an ECS cluster (if not already created).
+Deploy your services as ECS tasks.
+Configure load balancers and other resources as defined in the Compose file.
+Monitor Services:
+
+Go to the AWS Management Console > ECS to view the running services.
+Use docker compose ps to view running tasks and their endpoints.
+
+
+![alt text](image-2.png)
+
+
+
+
+
+####### How to setup AWS ecs CD pipeline############
+
+Grant Required IAM Permissions
+
+0. add permission to create ECR repository
+
+![alt text](image-3.png)
+
+
+1. Create an ECR Repository
+
+![alt text](image-4.png)
+
+2. update workflow environment variable
+env:
+  ECR_REPOSITORY: 'my-ecr-repo'  # Replace with the name of your ECR repository
+  AWS_REGION: 'us-east-2'       # Replace with the AWS region of your repository
+
+
+3. Authenticate Docker to Your ECR Repository
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-2.amazonaws.com
+Replace <account-id> with your AWS account ID (12-digit number).
+Replace us-east-2 with your AWS region.
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 992382444957.dkr.ecr.us-east-2.amazonaws.com
+
+
+4. create ecr service
+![alt text](image-5.png)
+
+
+access container from terminal
+1. run docker ps
+
+
+How to Deploy a Multi Container Docker Compose Application On Amazon EC2
+
+https://everythingdevops.dev/how-to-deploy-a-multi-container-docker-compose-application-on-amazon-ec2/
+
+### How to deploy app to google cloud compute engine
+
+1. create vm on google cloud
+![alt text](image-10.png)
+<img alt="stock financial" src="./docs/image-10.png" width="1000">
+
+1.1
+<img alt="stock financial" src="./docs/image-11.png" width="1000">
+2. leave everything else as default except for changing this below(cheapest option) and click create
+
+<img alt="stock financial" src="./docs/image-12.png" width="1000">
+3. connect to your vm terminal by clicking ssh as below
+<img alt="stock financial" src="./docs/image-13.png" width="1000">
+4. follow steps below to allow vm to clone from your repo
+
+### How to authenticate vm to clone from your repo
+1. generate new ssh key
+ssh-keygen -t ed25519 -C "your_email@example.com"(replace with your email)
+ssh-keygen -t ed25519 -C "hgao62@uwo.ca"
+2. add ssh key to the ssh agent
+2.1 start ssh agent
+eval "$(ssh-agent -s)"
+2.2 Add your SSH private key to the agent:
+ssh-add ~/.ssh/id_ed25519
+3. copy your public key to github
+cat ~/.ssh/id_ed25519.pub
+
+3.1 open your github setting page and click "SSH and GPG keys"
+
+<img alt="stock financial" src="./docs/image-6.png" width="1000">
+
+3.2 click "New SSH key"
+<img alt="stock financial" src="./docs/image-7.png" width="1000">
+
+4. test your ssh key works with github by running command below
+ssh -T git@github.com
+
+all the commands you need to run in one screenshot
+
+<img alt="stock financial" src="./docs/image-8.png" width="1000">
+
+5. run
+git clone <ssh path as shown in screenshot below>
+<img alt="stock financial" src="./docs/image-14.png" width="1000">
+### How to authenticate vm to clone from your repo
+
+6. run:sudo usermod -aG docker $USER
+7. run:logout
+8. logout back in by click "SSH" ON VM(same as step 3 above)
+9. run: test command below to make sure no error
+docker ps
+10. run: docker-compose up --build
+
+11. if experience finance_etl_training_airflow_webserver_1 exited with code 127
+run: sudo apt install dos2unix
+and then run:dos2unix entrypoint.sh
+
+12. create fire wall rules by following below
+Firewall Configuration: Ensure that your VM’s firewall rules allow inbound traffic on port 8080. You can verify this in the Google Cloud Console under VPC Network > Firewall:
+
+Look for a rule that allows traffic on port 8080.
+If there’s no rule, create one:
+Go to VPC Network > Firewall Rules.
+Click Create Firewall Rule.
+Set the following:
+Name: allow-airflow-8080.
+Targets: All instances in the network or specify your instance.
+Source IP ranges: 0.0.0.0/0 (to allow access from anywhere).
+Protocols and ports: Select TCP and specify port 8080.
+
+<img alt="stock financial" src="./docs/image-15.png" width="1000">
+
+
+
+### Use docker exec to Run Commands in a Running Container
+1. docker ps
+2. docker exec -it <container_name_or_id> sh
+3. run your command
+
+
+
+### Commonly experienced issue
+
+<img alt="stock financial" src="./docs/image-16.png" width="1000">
+
+this means airflow is still running on a stale file(look for airflow process)
+ps aux | grep airflow
