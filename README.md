@@ -475,17 +475,38 @@ https://everythingdevops.dev/how-to-deploy-a-multi-container-docker-compose-appl
 ### How to deploy app to google cloud compute engine
 
 1. create vm on google cloud
-![alt text](image-10.png)
+
 <img alt="stock financial" src="./docs/image-10.png" width="1000">
 
 1.1
+
 <img alt="stock financial" src="./docs/image-11.png" width="1000">
+
 2. leave everything else as default except for changing this below(cheapest option) and click create
 
 <img alt="stock financial" src="./docs/image-12.png" width="1000">
+
 3. connect to your vm terminal by clicking ssh as below
+
 <img alt="stock financial" src="./docs/image-13.png" width="1000">
+
 4. follow steps below to allow vm to clone from your repo
+
+# install git on vm
+sudo apt install -y git
+
+
+
+# Install Docker Compose
+sudo apt update
+sudo apt install -y docker.io
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Verify installation
+docker --version
+docker-compose --version
 
 ### How to authenticate vm to clone from your repo
 1. generate new ssh key
@@ -518,6 +539,7 @@ git clone <ssh path as shown in screenshot below>
 <img alt="stock financial" src="./docs/image-14.png" width="1000">
 ### How to authenticate vm to clone from your repo
 
+### give user access to run docker command
 6. run:sudo usermod -aG docker $USER
 7. run:logout
 8. logout back in by click "SSH" ON VM(same as step 3 above)
@@ -542,8 +564,9 @@ Targets: All instances in the network or specify your instance.
 Source IP ranges: 0.0.0.0/0 (to allow access from anywhere).
 Protocols and ports: Select TCP and specify port 8080.
 
-<img alt="stock financial" src="./docs/image-15.png" width="1000">
+<img alt="stock financial" src="./docs/firewall.png" width="1000">
 
+<img alt="stock financial" src="./docs/create_fire_wall_new.png" width="1000">
 
 
 ### Use docker exec to Run Commands in a Running Container
