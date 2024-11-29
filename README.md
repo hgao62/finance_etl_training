@@ -569,6 +569,12 @@ Protocols and ports: Select TCP and specify port 8080.
 <img alt="stock financial" src="./docs/create_fire_wall_new.png" width="1000">
 
 
+
+### connect to your vm from local command terminal
+ssh -i ~/.ssh/id_rsa g471692309@34.68.96.254
+
+![alt text](image-1.png)
+
 ### Use docker exec to Run Commands in a Running Container
 1. docker ps
 2. docker exec -it <container_name_or_id> sh
