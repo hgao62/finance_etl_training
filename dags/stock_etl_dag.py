@@ -22,7 +22,7 @@ default_args = {
     "retries": 0,
     "retry_delay": timedelta(minutes=5),
     "params": {
-        "stock_list": ["AAPL"],
+        "stock_list": ["GOOG"],
         "period": "1d",
         "interval": "1d",
         "drop_existing_table": True,
