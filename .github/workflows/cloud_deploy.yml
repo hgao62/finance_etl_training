@@ -13,6 +13,9 @@ jobs:
       # Step 1: Check out the code
       - name: Checkout repository
         uses: actions/checkout@v3
+    
+      - name: Debug SSH Key
+        run: echo "${{ secrets.GCE_SSH_KEY }}" | base64 --decode
 
       # Step 2: Set up SSH agent
       - name: Set up SSH agent
@@ -34,5 +37,5 @@ jobs:
             docker-compose down
 
             # Build and start containers
-            docker-compose up --build
+            docker-compose up --build -d
           EOF
