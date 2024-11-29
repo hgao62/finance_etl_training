@@ -35,4 +35,11 @@ jobs:
 
             # Build and start containers
             docker-compose up --build -d
+            
           EOF
+
+      - name: Start Airflow Scheduler
+        run: |
+            docker exec -it finance_etl_training-airflow_webserver-1 sh
+            airflow scheduler    
+            EOF
