@@ -582,3 +582,8 @@ Protocols and ports: Select TCP and specify port 8080.
 
 this means airflow is still running on a stale file(look for airflow process)
 ps aux | grep airflow
+
+
+if encountered docker-compose: permission denied, run command below 
+![alt text](image.png)
+sudo chmod +x /usr/local/bin/docker-compose

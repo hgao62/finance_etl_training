@@ -1,0 +1,38 @@
+name: Deploy to GCE
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up SSH agent
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.GCE_SSH_KEY }}
+
+      # Step 3: Deploy to GCE VM
+      - name: Deploy application to GCE
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.GCE_SSH_USER }}@${{ secrets.GCE_HOST }} << 'EOF'
+            # Navigate to the application directory
+            cd /home/g471692309/finance_etl_training
+
+            # Pull the latest changes
+            git pull origin main
+
+            # Bring down existing containers (if any)
+            docker-compose down
+
+            # Build and start containers
+            docker-compose up --build
+          EOF
