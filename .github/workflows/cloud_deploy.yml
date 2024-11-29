@@ -14,9 +14,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
     
-      - name: Debug SSH Key
-        run: echo "${{ secrets.GCE_SSH_KEY }}" | base64 --decode
-
       # Step 2: Set up SSH agent
       - name: Set up SSH agent
         uses: webfactory/ssh-agent@v0.8.0
