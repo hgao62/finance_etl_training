@@ -1,5 +1,5 @@
 import logging  # 1. import logging
-
+import os
 import pandas as pd
 import yfinance as yf
 
@@ -13,22 +13,37 @@ FX_RATES_CURRENY_MAP = {
     "GBP": "USD",
 }
 
-
-def get_stock_history(stock, period="1d") -> str:
+def get_stock_history_wrapper(stock: str, start_date:str, end_date:str, api:str ='yaohoo') -> pd.DataFrame:
+    if api == 'yahoo':
+        return get_stock_history(stock, start_date, end_date)
+    elif api == 'tiingo':
+        return get_stock_history_tiingo(stock, start_date, end_date)
+    else:
+        raise ValueError(f"Unsupported API: {api}")
+    
+def get_stock_history(stock, start_date:str, end_date:str) -> str:
     """
     Function to pull historical stock data for a given stock.
 
     Arguments:
         stock: individual stock in which user wants to return data for.
+        start_date: Start date in the format YYYY-MM-DD.
+        end_date: End date in the format YYYY-MM-DD.
 
     Return:
         Pandas DataFrame with historical stock data.
     """
+    cache_filename = f"{stock}_{start_date}_{end_date}.csv"
+    cache_path = os.path.join("cache", cache_filename)
+    if os.path.exists(cache_path):
+        stock_history = pd.read_csv(cache_path)
+        logger.info(f"stock_history dataframe loaded from cache: {stock_history}")
+        return stock_history
     ticker = yf.Ticker(stock)
     sector = ticker.info["sector"]
     currency_code = ticker.fast_info["currency"]
-    stock_history = ticker.history(period=period).reset_index()
-    logging.info(f"stock_history dataframe downloaded: {stock_history}")
+    stock_history = ticker.history(start_date=start_date,end_date=end_date).reset_index()
+    logger.info(f"stock_history dataframe downloaded: {stock_history}")
     if stock_history.empty:
         return pd.DataFrame(
             [],
@@ -64,7 +79,94 @@ def get_stock_history(stock, period="1d") -> str:
             "currency_code"
         ]
     ]
+    try:
+        stock_history.to_csv(cache_path, index=False)
+        logging.info(f"Saved data to cache: {cache_path}")
+    except Exception as e:
+        logging.error(f"Failed to save cache file: {e}")
     return stock_history
+
+
+import pandas as pd
+import logging
+from tiingo import TiingoClient
+
+# Initialize the Tiingo client (make sure your API key is correct)
+config = {
+    'session': True,
+    'api_key': '56d6d8978c631aeeed1ced2bf370b7788c617104'
+}
+
+tiingo_client = TiingoClient(config)
+
+def get_stock_history_tiingo(stock: str,  start_date:str, end_date:str) -> pd.DataFrame:
+    """
+    Function to pull historical stock data for a given stock using Tiingo.
+
+    Arguments:
+        stock: individual stock in which user wants to return data for.
+        start_date: Start date in the format YYYY-MM-DD.
+        end_date: End date in the format YYYY-MM-DD.
+
+    Return:
+        Pandas DataFrame with historical stock data.
+    """
+    # Convert period to dates
+    cache_filename = f"{stock}_{start_date}_{end_date}.csv"
+    cache_path = os.path.join("cache", cache_filename)
+    if os.path.exists(cache_path):
+        stock_history = pd.read_csv(cache_path)
+        logger.info(f"stock_history dataframe loaded from cache: {stock_history}")
+        return stock_history
+
+    try:
+        prices = tiingo_client.get_ticker_price(
+            stock,
+            startDate=start_date,
+            endDate=end_date,
+            frequency="daily"
+        )
+    except Exception as e:
+        logging.error(f"Error fetching Tiingo data for {stock}: {e}")
+        raise
+
+    if not prices:
+        logging.warning(f"No data returned for {stock}")
+        return pd.DataFrame([], columns=[
+            "date", "open", "high", "low", "close", "volume", "dividends",
+            "stock", "sector", "currency_code"
+        ])
+
+    df = pd.DataFrame(prices)
+    df["date"] = pd.to_datetime(df["date"])
+    df["stock"] = stock
+    df["dividends"] = pd.NA  # Not directly available from Tiingo daily API
+
+    # Sector and currency info are not available from free Tiingo API — set placeholders
+    df["sector"] = pd.NA
+    df["currency_code"] = "USD"  # Tiingo returns USD for US stocks by default
+
+    # Rename adjusted columns for consistency with Yahoo-style
+    df = df.rename(columns={
+        "adjOpen": "open",
+        "adjHigh": "high",
+        "adjLow": "low",
+        "adjClose": "close",
+        "adjVolume": "volume"
+    })
+
+    df = df[[
+        "date", "open", "high", "low", "close", "volume",
+        "dividends", "stock", "sector", "currency_code"
+    ]]
+    try:
+        stock_history.to_csv(cache_path, index=False)
+        logging.info(f"Saved data to cache: {cache_path}")
+    except Exception as e:
+        logging.error(f"Failed to save cache file: {e}")
+        
+    logging.info(f"stock_history dataframe downloaded: {df}")
+    return df
 
 
 def get_stock_financials(stock):
@@ -218,15 +320,16 @@ def get_exchange_rate(from_currency, to_currency, period, interval)->pd.DataFram
 
 
 if __name__ == "__main__":
+
     # res = get_exchange_rate2("USD", "GBP", "5d", "1d")
-    # stock_history: pd.DataFrame = get_stock_history("goog", "5d")
+    stock_history: pd.DataFrame = get_stock_history("goog")
+    
+    
+    
     res = get_stock_history("SHOP.TO", "5d")
     tickers = [
         "AAPL",
-        "MSFT",
-        "GOOGL",
-        "AMZN",
-        "TSLA",
+        "MSFT","GOOGL", "AMZN","TSLA",
         # "SPY",
         "COST",
         "WMT",
@@ -246,6 +349,10 @@ if __name__ == "__main__":
     for ticker in tickers:
         financial = get_stock_financials('SHOP.TO')
         print(financial)
+        
+        
+        
+        
     # tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"]
     # get_stock_history("AAPL", "5d")
     # get_exchange_rate("SHOP.TO")

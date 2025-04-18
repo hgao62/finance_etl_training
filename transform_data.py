@@ -79,7 +79,7 @@ def filter_significant_volume(stock_history: pd.DataFrame, threshold: int = 1_00
 
 
 
-def group_by_sector(stock_history: pd.DataFrame) -> pd.DataFrame:
+def group_by_sector(stock_history: pd.DataFrame    ) -> pd.DataFrame:
     """
     Groups stock data by sector and calculates average closing price and volume for each sector.
 
@@ -91,6 +91,8 @@ def group_by_sector(stock_history: pd.DataFrame) -> pd.DataFrame:
     """
     
     stock_history_grouped = stock_history.groupby('sector').agg({'close':'mean', 'volume':'mean'}).reset_index()
+    
+    
     stock_history_grouped = stock_history_grouped.rename(columns = {'close':"avg_close", "volume":"avg_volume"})
     return stock_history_grouped
 
@@ -112,6 +114,10 @@ def merge_stock_with_fx(stock_history: pd.DataFrame, fx_rates: pd.DataFrame) -> 
     
     # Merge on date
     merged_df = pd.merge(stock_history, fx_rates, on='date', how='inner')
+    
+    
+    
+    
     
     # Adjust stock price to USD
     merged_df['close_usd'] = merged_df['close'] * merged_df['Close']
