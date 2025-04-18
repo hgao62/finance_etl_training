@@ -1,5 +1,5 @@
 # Pprerequisite
-- 1 python 3.7.9:https://www.python.org/downloads/release/python-379/
+- 1 python 3.8 :https://www.python.org/downloads/release/python-380/
 - 2 github account:https://github.com/
 - 3 visual studio code: https://code.visualstudio.com/download
 - 4 download obs for video recording: https://obsproject.com/
