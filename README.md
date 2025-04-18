@@ -4,8 +4,7 @@
 - 3 visual studio code: https://code.visualstudio.com/download
 - 4 download obs for video recording: https://obsproject.com/
 
-## Github repo
-https://github.com/hgao62/vera_project.git
+
 ### Task 1
 * 1. create main.py, extract_data.py, load_data.py, transform.py
 * 2. create requirements.txt file that has contents below
