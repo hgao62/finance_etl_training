@@ -7,6 +7,7 @@
 - 5 download git for version control https://git-scm.com/downloads/
 
 git config --global user.name "Your Name"
+
 git config --global user.email "your_email@example.com"
 
 Install following extension in vs code
