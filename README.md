@@ -4,6 +4,10 @@
 - 2 github account:https://github.com/
 - 3 visual studio code: https://code.visualstudio.com/download
 - 4 download obs for video recording: https://obsproject.com/
+- 5 download git for version control https://git-scm.com/downloads/
+
+git config --global user.name "Your Name"
+git config --global user.email "your_email@example.com"
 
 Install following extension in vs code
 
@@ -13,7 +17,15 @@ autoDocstring
 Python
 ![alt text](image-3.png)
 
-### Static code analysis tool
+### Lesson1 预习资料
+
+1.what is a virtual environment https://www.youtube.com/watch?v=Y21OR1OPC9A
+
+2.Github 101 https://www.youtube.com/watch?v=SD7YNLv5Evc
+
+### Lesson2 预习资料
+
+Static code analysis tool
 
 - pylint: check your code style, enforces coding standard and make suggestions about how the code could be refactored recommend by PEP8(a python tyle guide) and rate it from 0-10. 💡Interview questions: what is pep 8 （answers:https://realpython.com/python-pep8/#:~:text=PEP%208%2C%20sometimes%20spelled%20PEP8,and%20consistency%20of%20Python%20code.)
 - black: format your code automatically
