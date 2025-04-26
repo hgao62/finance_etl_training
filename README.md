@@ -38,10 +38,18 @@ Static code analysis tool
 - 2. create requirements.txt file that has contents below
 
 ```
-SQLAlchemy==1.4.52
+apache-airflow==2.9.0
+nltk==3.8.1
+numpy==1.24.4
+pandas==1.3.5
+SQLAlchemy==1.4.36
 yfinance==0.2.37
-pandas>=1.3.0
-numpy>=1.21.0
+mysqlclient==2.2.0
+mysql-connector-python==8.3.0
+tiingo==0.14.0
+pylint==2.17.7
+black==23.3.0
+isort==5.9.3
 ```
 
 - 3. create virtual environment by running python -m venv venv
