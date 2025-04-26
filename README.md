@@ -43,7 +43,7 @@ nltk==3.8.1
 numpy==1.24.4
 pandas==1.3.5
 SQLAlchemy==1.4.36
-yfinance==0.2.37
+yfinance==0.2.56
 mysqlclient==2.2.0
 mysql-connector-python==8.3.0
 tiingo==0.14.0
