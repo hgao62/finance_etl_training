@@ -24,6 +24,13 @@ Python
 
 2.Github 101 https://www.youtube.com/watch?v=SD7YNLv5Evc
 
+把自己的代码提交到 remote 4 步走
+
+1. stage(站台）
+2. write commit message
+3. commit(乘客上车)
+4. push(发车)
+
 ### Lesson2 预习资料
 
 Static code analysis tool
