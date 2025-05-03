@@ -64,7 +64,7 @@ isort==5.9.3
 - 4. run pip install -r requirements.txt
 - 5. familiar yourself with use yahoo finance api by looking at example here
      [Yahoo finance api example file](./samples/yahoo_finance_api_usage_example.py)
-- 6. create two functions in extrac_data.py see below
+- 6. create a functions in extract_data.py see below
 
 ```python
 def get_stock_history(stock:str,period:str,interval:str)->pd.DataFrame:
@@ -73,21 +73,23 @@ def get_stock_history(stock:str,period:str,interval:str)->pd.DataFrame:
        https://github.com/ranaroussi/yfinance
     '''
 
-
-
-def get_stock_history(stock:str,start_date:str,end_date:str, interval:str)->pd.DataFrame:
-    ''' Now try to add cache to this function to save api call as too many api calls would hit rate limit on yahoo finance
-modify our get_stock_history function above to read data from cache folder(need to create this folder in our project directory)
-if cache file exist. Save our cache file in the format of  cache_filename = f"{stock}_{start_date}_{end_date}.csv"
-    '''
-
-
 ```
 
 it should return a data frame like this below
 
 <!-- ![stock history](stock_history_output.png) -->
 <img alt="stock history" src="./docs/stock_history_output.png" width="1000">
+
+Bonus point: 如果上面做完了，还有多的时间，加上这个 cache feature
+
+Now try to add cache to this function to save api call as too many api calls would hit rate limit on yahoo finance
+modify our get_stock_history function above to read data from cache folder(need to create this folder in our project directory)
+if cache file exist. Save our cache file in the format of cache_filename = f"{stock}*{start*date}\*{end_date}.csv"
+
+```python
+def get_stock_history(stock:str,start_date:str,end_date:str, interval:str)->pd.DataFrame:
+
+```
 
 When creating functions, please add type hinting and doc string like below
 
