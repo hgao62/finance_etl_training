@@ -1,3 +1,4 @@
+"""This module contains functions to extract stock data from Yahoo Finance and Tiingo APIs."""
 import logging  # 1. import logging
 import os
 import pandas as pd
@@ -13,14 +14,29 @@ FX_RATES_CURRENY_MAP = {
     "GBP": "USD",
 }
 
-def get_stock_history_wrapper(stock: str, start_date:str, end_date:str, api:str ='yaohoo') -> pd.DataFrame:
+def get_stock_history_wrapper(stock: str, start_date:str, 
+                              end_date:str, api:str ='yaohoo') -> pd.DataFrame:
+    """This function is a wrapper for the get_stock_history function.
+    It allows the user to specify the API to use for fetching stock data.
+
+    Args:
+        stock (str): stock ticker
+        start_date (str): start date in the format YYYY-MM-DD
+        end_date (str): _description_
+        api (str, optional): _description_. Defaults to 'yaohoo'.
+
+    Raises:
+        ValueError: _description_
+
+    Returns:
+        pd.DataFrame: _description_
+    """
     if api == 'yahoo':
         return get_stock_history(stock, start_date, end_date)
     elif api == 'tiingo':
         return get_stock_history_tiingo(stock, start_date, end_date)
     else:
         raise ValueError(f"Unsupported API: {api}")
-    
 def get_stock_history(stock, start_date:str, end_date:str) -> str:
     """
     Function to pull historical stock data for a given stock.
@@ -163,7 +179,7 @@ def get_stock_history_tiingo(stock: str,  start_date:str, end_date:str) -> pd.Da
         stock_history.to_csv(cache_path, index=False)
         logging.info(f"Saved data to cache: {cache_path}")
     except Exception as e:
-        logging.error(f"Failed to save cache file: {e}")
+        logging.error("Failed to save cache file: %s", e)
         
     logging.info(f"stock_history dataframe downloaded: {df}")
     return df
