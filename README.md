@@ -67,10 +67,11 @@ def get_stock_history(stock:str,period:str,interval:str)->pd.DataFrame:
     '''
 
 
-Now try to add cache to this function to save api call as too many api calls would hit rate limit on yahoo finance
 
-def get_stock_history(stock:str,period:str,interval:str)->pd.DataFrame:
-    ''' we first check if
+def get_stock_history(stock:str,start_date:str,end_date:str, interval:str)->pd.DataFrame:
+    ''' Now try to add cache to this function to save api call as too many api calls would hit rate limit on yahoo finance
+modify our get_stock_history function above to read data from cache folder(need to create this folder in our project directory)
+if cache file exist. Save our cache file in the format of  cache_filename = f"{stock}_{start_date}_{end_date}.csv"
     '''
 
 
@@ -119,7 +120,7 @@ and output should look like below
 <img alt="stock financial" src="./docs/news.png" width="1000">
 
 4. Add a new python file called transform_data.py and it should round open, high, low, close columns to 2 decimal places
-   and rename data column to trade_data
+   and rename data column to trade_date
 
 ```Python
 def normalize_stock_data(stock_history: pd.DataFrame) -> pd.DataFrame:
@@ -166,7 +167,7 @@ def calculate_moving_average(stock_history: pd.DataFrame, window: int = 5) ->pd.
 4. finish get_top_bottom_days function below so it returns stock history data with top n days and bottom n days by price for sepecific ticker
 
 ```python
-def get_top_bottom_days(ticker n: int =5) -> pd.DataFrame:
+def get_top_bottom_days(stock_history: pd.DataFrame, ticker:str, top_n: int = 5, ) -> pd.DataFrame:
 
 
 ```
