@@ -60,6 +60,18 @@ isort==5.9.3
 ```
 
 - 3. create virtual environment by running python -m venv venv
+
+(optional: choose a specific global python interpreter to create virtual environment using
+command below:
+C:\Users\hgao6\AppData\Local\Programs\Python\Python37\python.exe -m venv myenv
+
+replace "C:\Users\hgao6\AppData\Local\Programs\Python\Python37\python.exe" with your python path
+
+you can run this "where python" find out the python installation path on windows(see screenshot below)
+![alt text](image.png)
+
+)
+
 - 4. activate virtual environment by running venv\scripts\activate
 - 4. run pip install -r requirements.txt
 - 5. familiar yourself with use yahoo finance api by looking at example here
