@@ -63,7 +63,7 @@ isort==5.9.3
 
 (optional: choose a specific global python interpreter to create virtual environment using
 command below:
-C:\Users\hgao6\AppData\Local\Programs\Python\Python37\python.exe -m venv myenv
+C:\Users\hgao6\AppData\Local\Programs\Python\Python37\python.exe -m venv venv
 
 replace "C:\Users\hgao6\AppData\Local\Programs\Python\Python37\python.exe" with your python path
 
