@@ -365,12 +365,6 @@ Protocols and ports: Select TCP and specify port 8080.
 
 <img alt="stock financial" src="./docs/image-15.png" width="1000">
 
-### Use docker exec to Run Commands in a Running Container
-
-1. docker ps
-2. docker exec -it <container_name_or_id> sh
-3. run your command
-
 ### Commonly experienced issue
 
 <img alt="stock financial" src="./docs/image-16.png" width="1000">
@@ -585,3 +579,9 @@ access container from terminal
 How to Deploy a Multi Container Docker Compose Application On Amazon EC2
 
 https://everythingdevops.dev/how-to-deploy-a-multi-container-docker-compose-application-on-amazon-ec2/
+
+### Use docker exec to Run Commands in a Running Container
+
+1. docker ps
+2. docker exec -it <container_name_or_id> sh
+3. run your command
