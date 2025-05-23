@@ -289,7 +289,96 @@ https://www.youtube.com/watch?v=HG6yIjZapSA&t=1598s
 apache airflow in half an hour(only need to watch first 4 videos)
 https://www.youtube.com/watch?v=s6PgXq-SO4I&list=PLc2EZr8W2QIAI0cS1nZGNxoLzppb7XbqM
 
-## Task 8 Deploy app to google cloud
+## Task 8 How to deploy app to google cloud compute engine
+
+Please follow the steps below(also, you can refer to the video recording here for more details )
+https://drive.google.com/file/d/1kuKw1y7cZSpn0xj-DqfHaiU3qlii1F7u/view?usp=drive_link
+
+1. create vm on google cloud
+   ![alt text](image-10.png)
+   <img alt="stock financial" src="./docs/image-10.png" width="1000">
+
+1.1
+<img alt="stock financial" src="./docs/image-11.png" width="1000"> 2. leave everything else as default except for changing this below(cheapest option) and click create
+
+<img alt="stock financial" src="./docs/image-12.png" width="1000">
+3. connect to your vm terminal by clicking ssh as below
+<img alt="stock financial" src="./docs/image-13.png" width="1000">
+4. follow steps below to allow vm to clone from your repo
+
+### How to authenticate vm to clone from your repo
+
+1. generate new ssh key
+   ssh-keygen -t ed25519 -C "your_email@example.com"(replace with your email)
+   ssh-keygen -t ed25519 -C "hgao62@uwo.ca"
+2. add ssh key to the ssh agent
+   2.1 start ssh agent
+   eval "$(ssh-agent -s)"
+   2.2 Add your SSH private key to the agent:
+   ssh-add ~/.ssh/id_ed25519
+3. copy your public key to github
+   cat ~/.ssh/id_ed25519.pub
+
+3.1 open your github setting page and click "SSH and GPG keys"
+
+<img alt="stock financial" src="./docs/image-6.png" width="1000">
+
+3.2 click "New SSH key"
+<img alt="stock financial" src="./docs/image-7.png" width="1000">
+
+4. test your ssh key works with github by running command below
+   ssh -T git@github.com
+
+all the commands you need to run in one screenshot
+
+<img alt="stock financial" src="./docs/image-8.png" width="1000">
+
+5. run
+   git clone <ssh path as shown in screenshot below>
+   <img alt="stock financial" src="./docs/image-14.png" width="1000">
+
+### How to authenticate vm to clone from your repo
+
+6. run:sudo usermod -aG docker $USER
+7. run:logout
+8. logout back in by click "SSH" ON VM(same as step 3 above)
+9. run: test command below to make sure no error
+   docker ps
+10. run: docker-compose up --build
+
+11. if experience finance_etl_training_airflow_webserver_1 exited with code 127
+    run: sudo apt install dos2unix
+    and then run:dos2unix entrypoint.sh
+
+12. create fire wall rules by following below
+    Firewall Configuration: Ensure that your VM’s firewall rules allow inbound traffic on port 8080. You can verify this in the Google Cloud Console under VPC Network > Firewall:
+
+Look for a rule that allows traffic on port 8080.
+If there’s no rule, create one:
+Go to VPC Network > Firewall Rules.
+Click Create Firewall Rule.
+Set the following:
+Name: allow-airflow-8080.
+Targets: All instances in the network or specify your instance.
+Source IP ranges: 0.0.0.0/0 (to allow access from anywhere).
+Protocols and ports: Select TCP and specify port 8080.
+
+<img alt="stock financial" src="./docs/image-15.png" width="1000">
+
+### Use docker exec to Run Commands in a Running Container
+
+1. docker ps
+2. docker exec -it <container_name_or_id> sh
+3. run your command
+
+### Commonly experienced issue
+
+<img alt="stock financial" src="./docs/image-16.png" width="1000">
+
+this means airflow is still running on a stale file(look for airflow process)
+ps aux | grep airflow
+
+### Personal Note
 
 youtube tutorial
 https://www.youtube.com/watch?v=7CvD6oHmYxU
@@ -496,89 +585,3 @@ access container from terminal
 How to Deploy a Multi Container Docker Compose Application On Amazon EC2
 
 https://everythingdevops.dev/how-to-deploy-a-multi-container-docker-compose-application-on-amazon-ec2/
-
-### How to deploy app to google cloud compute engine
-
-1. create vm on google cloud
-   ![alt text](image-10.png)
-   <img alt="stock financial" src="./docs/image-10.png" width="1000">
-
-1.1
-<img alt="stock financial" src="./docs/image-11.png" width="1000"> 2. leave everything else as default except for changing this below(cheapest option) and click create
-
-<img alt="stock financial" src="./docs/image-12.png" width="1000">
-3. connect to your vm terminal by clicking ssh as below
-<img alt="stock financial" src="./docs/image-13.png" width="1000">
-4. follow steps below to allow vm to clone from your repo
-
-### How to authenticate vm to clone from your repo
-
-1. generate new ssh key
-   ssh-keygen -t ed25519 -C "your_email@example.com"(replace with your email)
-   ssh-keygen -t ed25519 -C "hgao62@uwo.ca"
-2. add ssh key to the ssh agent
-   2.1 start ssh agent
-   eval "$(ssh-agent -s)"
-   2.2 Add your SSH private key to the agent:
-   ssh-add ~/.ssh/id_ed25519
-3. copy your public key to github
-   cat ~/.ssh/id_ed25519.pub
-
-3.1 open your github setting page and click "SSH and GPG keys"
-
-<img alt="stock financial" src="./docs/image-6.png" width="1000">
-
-3.2 click "New SSH key"
-<img alt="stock financial" src="./docs/image-7.png" width="1000">
-
-4. test your ssh key works with github by running command below
-   ssh -T git@github.com
-
-all the commands you need to run in one screenshot
-
-<img alt="stock financial" src="./docs/image-8.png" width="1000">
-
-5. run
-   git clone <ssh path as shown in screenshot below>
-   <img alt="stock financial" src="./docs/image-14.png" width="1000">
-
-### How to authenticate vm to clone from your repo
-
-6. run:sudo usermod -aG docker $USER
-7. run:logout
-8. logout back in by click "SSH" ON VM(same as step 3 above)
-9. run: test command below to make sure no error
-   docker ps
-10. run: docker-compose up --build
-
-11. if experience finance_etl_training_airflow_webserver_1 exited with code 127
-    run: sudo apt install dos2unix
-    and then run:dos2unix entrypoint.sh
-
-12. create fire wall rules by following below
-    Firewall Configuration: Ensure that your VM’s firewall rules allow inbound traffic on port 8080. You can verify this in the Google Cloud Console under VPC Network > Firewall:
-
-Look for a rule that allows traffic on port 8080.
-If there’s no rule, create one:
-Go to VPC Network > Firewall Rules.
-Click Create Firewall Rule.
-Set the following:
-Name: allow-airflow-8080.
-Targets: All instances in the network or specify your instance.
-Source IP ranges: 0.0.0.0/0 (to allow access from anywhere).
-Protocols and ports: Select TCP and specify port 8080.
-
-<img alt="stock financial" src="./docs/image-15.png" width="1000">
-
-### Use docker exec to Run Commands in a Running Container
-
-1. docker ps
-2. docker exec -it <container_name_or_id> sh
-3. run your command
-
-### Commonly experienced issue
-
-<img alt="stock financial" src="./docs/image-16.png" width="1000">
-
-this means airflow is still running on a stale file(look for airflow process)
-ps aux | grep airflow
