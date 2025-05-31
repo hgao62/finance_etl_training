@@ -275,6 +275,9 @@ logging.info('Admin logged in')
 
 ### Task 6 dockerize your project
 
+install docker desktop on windows
+https://docs.docker.com/desktop/setup/install/windows-install/
+
 hands-on tutorial created by myself
 https://github.com/hgao62/docker_tutorial
 
