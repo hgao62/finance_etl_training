@@ -17,7 +17,7 @@ services:
       retries: 10
     # volumes:
     #   - mysql-db-volume:/var/lib/mysql # Mount the MySQL data volume
-    command: mysqld --sql_mode="ALLOW_INVALID_DATES"
+    # command: mysqld --sql_mode="ALLOW_INVALID_DATES"
 
 # Define the Airflow webserver service
   airflow_webserver:
