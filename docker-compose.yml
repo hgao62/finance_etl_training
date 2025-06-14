@@ -9,6 +9,12 @@ services:
       MYSQL_PASSWORD: airflow_pass # Set the password for the airflow user
     ports:
       - "3366:3306" # Map the container port 3306 to the host port 3366
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "airflow_user", "-pairflow_pass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     volumes:
       - mysql-db-volume:/var/lib/mysql # Mount the MySQL data volume
     command: mysqld --sql_mode="ALLOW_INVALID_DATES"
