@@ -3,6 +3,13 @@ from extract_data import get_exchange_rate
 
 FX_RATE_CACHE = {}
 
+                    # input parameter             # return value
+def add_stock_history(stock_history: pd.DataFrame)->pd.DataFrame:
+    
+    stock_history = stock_history.sort_values(by="date")
+    stock_history["daily_return"] = stock_history["close"].pct_change()
+    stock_history["cumulative_return"] = (1 + stock_history["daily_return"]).cumprod()
+    return stock_history
 
 def add_stock_returns(stock_history) -> pd.DataFrame:
     """
@@ -24,16 +31,21 @@ def add_stock_returns(stock_history) -> pd.DataFrame:
 
 def standardize_price_to_usd(stock_history: pd.DataFrame) -> pd.DataFrame:
     stock_currency_code = stock_history.iloc[0]["currency_code"]
-    if (stock_currency_code, "USD") in FX_RATE_CACHE:
-        fx_rate = FX_RATE_CACHE[(stock_currency_code, "USD")]
+    if (stock_currency_code, "usd") in FX_RATE_CACHE:
+        fx_rate = FX_RATE_CACHE[(stock_currency_code, "usd")]
     else:
-        fx_rate_df = get_exchange_rate(stock_currency_code, "USD", "1d", "1d")
-        fx_rate = fx_rate_df.iloc[0]["Close"]
-        FX_RATE_CACHE[(stock_currency_code, "USD")] = fx_rate
+        if stock_currency_code != "USD":
+            fx_rate_df = get_exchange_rate(stock_currency_code, "USD", "1d", "1d")
+            fx_rate = fx_rate_df.iloc[0]["Close"]
+            FX_RATE_CACHE[(stock_currency_code, "USD")] = fx_rate
 
-    stock_history["usd_close"] = stock_history["close"] * fx_rate
+    if stock_currency_code == "USD":
+        stock_history["usd_close"] = stock_history["close"]
+    else:
+        stock_history["usd_close"] = stock_history["close"] * fx_rate
+    # handle usd currency
+   
     return stock_history
-
 
 def normalize_stock_data(stock_history: pd.DataFrame) -> pd.DataFrame:
     """
@@ -52,10 +64,25 @@ def normalize_stock_data(stock_history: pd.DataFrame) -> pd.DataFrame:
     return stock_history
 
 
+def add_two_numbers(num1: int, num2: int) -> int:
+    """
+    Function to add two numbers.
+
+    Args:
+        num1: First number.
+        num2: Second number.
+
+    Returns:
+        Sum of the two numbers.
+    """
+    return num1 + num2
+
+add_two_numbers(num2=2 ,num1=1)
+
 def calculate_moving_average(
-    stock_history: pd.DataFrame, window: int = 5
+    stock_history: pd.DataFrame, window_size: int = 5
 ) -> pd.DataFrame:
-    stock_history["MA"] = stock_history["close"].rolling(window=window).mean()
+    stock_history["MA"] = stock_history["close"].rolling(window_size=10).mean()
     return stock_history
 
 
@@ -66,6 +93,7 @@ def get_top_bottom_days(stock_history: pd.DataFrame, ticker:str, top_n: int = 5,
 
     top_bottom_days = pd.concat([top_n, bottom_n])
     return top_bottom_days
+
 
 
 def filter_significant_volume(
@@ -108,6 +136,21 @@ def group_by_sector(stock_history: pd.DataFrame) -> pd.DataFrame:
     )
     return stock_history_grouped
 
+stock_history = pd.DataFrame(
+    {
+        "date": ["2023-01-01", "2023-01-02", "2023-01-03"],
+        "ticker": ["AAPL", "AAPL", "costco"],
+        "open": [150, 152, 153],
+        "high": [155, 156, 157],
+        "low": [149, 150, 151],
+        "close": [154, 155, 156],
+        "volume": [1000000, 1200000, 1100000],
+        "currency_code": ["USD", "USD", "USD"],
+        "sector": ["Technology", "Technology", "consumer"],
+    }
+)
+df = group_by_sector(stock_history)
+print(df)
 
 def merge_stock_with_fx(
     stock_history: pd.DataFrame, fx_rates: pd.DataFrame

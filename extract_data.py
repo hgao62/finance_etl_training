@@ -3,6 +3,7 @@ import logging  # 1. import logging
 import os
 import pandas as pd
 import yfinance as yf
+from tiingo import TiingoClient
 
 logger = logging.getLogger(__name__)
 
@@ -14,8 +15,10 @@ FX_RATES_CURRENY_MAP = {
     "GBP": "USD",
 }
 
-def get_stock_history_wrapper(stock: str, start_date:str, 
-                              end_date:str, api:str ='yaohoo') -> pd.DataFrame:
+
+def get_stock_history_wrapper(
+    stock: str, start_date: str, end_date: str, api: str = "yahoo"
+) -> pd.DataFrame:
     """This function is a wrapper for the get_stock_history function.
     It allows the user to specify the API to use for fetching stock data.
 
@@ -23,7 +26,7 @@ def get_stock_history_wrapper(stock: str, start_date:str,
         stock (str): stock ticker
         start_date (str): start date in the format YYYY-MM-DD
         end_date (str): _description_
-        api (str, optional): _description_. Defaults to 'yaohoo'.
+        api (str, optional): _description_. Defaults to 'yahoo'.
 
     Raises:
         ValueError: _description_
@@ -31,13 +34,15 @@ def get_stock_history_wrapper(stock: str, start_date:str,
     Returns:
         pd.DataFrame: _description_
     """
-    if api == 'yahoo':
+    if api == "yahoo":
         return get_stock_history(stock, start_date, end_date)
-    elif api == 'tiingo':
+    elif api == "tiingo":
         return get_stock_history_tiingo(stock, start_date, end_date)
     else:
         raise ValueError(f"Unsupported API: {api}")
-def get_stock_history(stock, start_date:str, end_date:str) -> str:
+
+
+def get_stock_history(stock, start_date: str, end_date: str) -> str:
     """
     Function to pull historical stock data for a given stock.
 
@@ -58,29 +63,31 @@ def get_stock_history(stock, start_date:str, end_date:str) -> str:
     ticker = yf.Ticker(stock)
     sector = ticker.info["sector"]
     currency_code = ticker.fast_info["currency"]
-    stock_history = ticker.history(start_date=start_date,end_date=end_date).reset_index()
+    stock_history = ticker.history(
+        start=start_date, end=end_date
+    ).reset_index()
     logger.info(f"stock_history dataframe downloaded: {stock_history}")
     if stock_history.empty:
         return pd.DataFrame(
             [],
             columns=[
-            "date",
-            "open",
-            "high",
-            "low",
-            "close",
-            "volume",
-            "dividends",
-            "stock",
-            "sector",
-            "currency_code"
+                "date",
+                "open",
+                "high",
+                "low",
+                "close",
+                "volume",
+                "dividends",
+                "stock",
+                "sector",
+                "currency_code",
             ],
         )
     stock_history = stock_history.rename(str.lower, axis="columns")
     stock_history["stock"] = stock
     stock_history["date"] = pd.to_datetime(stock_history["date"])
     stock_history["sector"] = sector
-    stock_history["currency_code"] =  currency_code
+    stock_history["currency_code"] = currency_code
     stock_history = stock_history[
         [
             "date",
@@ -92,7 +99,7 @@ def get_stock_history(stock, start_date:str, end_date:str) -> str:
             "dividends",
             "stock",
             "sector",
-            "currency_code"
+            "currency_code",
         ]
     ]
     try:
@@ -103,19 +110,17 @@ def get_stock_history(stock, start_date:str, end_date:str) -> str:
     return stock_history
 
 
-import pandas as pd
-import logging
-from tiingo import TiingoClient
+
 
 # Initialize the Tiingo client (make sure your API key is correct)
-config = {
-    'session': True,
-    'api_key': '56d6d8978c631aeeed1ced2bf370b7788c617104'
-}
+config = {"session": True, "api_key": "56d6d8978c631aeeed1ced2bf370b7788c617104"}
 
 tiingo_client = TiingoClient(config)
 
-def get_stock_history_tiingo(stock: str,  start_date:str, end_date:str) -> pd.DataFrame:
+
+def get_stock_history_tiingo(
+    stock: str, start_date: str, end_date: str
+) -> pd.DataFrame:
     """
     Function to pull historical stock data for a given stock using Tiingo.
 
@@ -137,10 +142,7 @@ def get_stock_history_tiingo(stock: str,  start_date:str, end_date:str) -> pd.Da
 
     try:
         prices = tiingo_client.get_ticker_price(
-            stock,
-            startDate=start_date,
-            endDate=end_date,
-            frequency="daily"
+            stock, startDate=start_date, endDate=end_date, frequency="daily"
         )
     except Exception as e:
         logging.error(f"Error fetching Tiingo data for {stock}: {e}")
@@ -148,10 +150,21 @@ def get_stock_history_tiingo(stock: str,  start_date:str, end_date:str) -> pd.Da
 
     if not prices:
         logging.warning(f"No data returned for {stock}")
-        return pd.DataFrame([], columns=[
-            "date", "open", "high", "low", "close", "volume", "dividends",
-            "stock", "sector", "currency_code"
-        ])
+        return pd.DataFrame(
+            [],
+            columns=[
+                "date",
+                "open",
+                "high",
+                "low",
+                "close",
+                "volume",
+                "dividends",
+                "stock",
+                "sector",
+                "currency_code",
+            ],
+        )
 
     df = pd.DataFrame(prices)
     df["date"] = pd.to_datetime(df["date"])
@@ -163,24 +176,36 @@ def get_stock_history_tiingo(stock: str,  start_date:str, end_date:str) -> pd.Da
     df["currency_code"] = "USD"  # Tiingo returns USD for US stocks by default
 
     # Rename adjusted columns for consistency with Yahoo-style
-    df = df.rename(columns={
-        "adjOpen": "open",
-        "adjHigh": "high",
-        "adjLow": "low",
-        "adjClose": "close",
-        "adjVolume": "volume"
-    })
+    df = df.rename(
+        columns={
+            "adjOpen": "open",
+            "adjHigh": "high",
+            "adjLow": "low",
+            "adjClose": "close",
+            "adjVolume": "volume",
+        }
+    )
 
-    df = df[[
-        "date", "open", "high", "low", "close", "volume",
-        "dividends", "stock", "sector", "currency_code"
-    ]]
+    df = df[
+        [
+            "date",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "dividends",
+            "stock",
+            "sector",
+            "currency_code",
+        ]
+    ]
     try:
         stock_history.to_csv(cache_path, index=False)
         logging.info(f"Saved data to cache: {cache_path}")
     except Exception as e:
         logging.error("Failed to save cache file: %s", e)
-        
+
     logging.info(f"stock_history dataframe downloaded: {df}")
     return df
 
@@ -248,7 +273,7 @@ def get_stock_financials(stock):
         "Reconciled Depreciation",
         "Reconciled Cost Of Revenue",
         "EBITDA",
-        "EBIT"
+        "EBIT",
     ]
     ticker = yf.Ticker(stock)
     stock_financials = ticker.financials.transpose().reset_index()
@@ -276,10 +301,12 @@ def get_news(stock):
     ticker = yf.Ticker(stock)
     news_list = ticker.news
     news_df = pd.DataFrame(news_list)
+
     news_df["Ticker"] = stock
     news_df = news_df.drop(["thumbnail", "relatedTickers"], axis=1)
 
     return news_df
+
 
 def get_stock_currency_code(stock: str) -> str:
     """this function should retrieve currency this stock belongs to
@@ -293,8 +320,6 @@ def get_stock_currency_code(stock: str) -> str:
     ticker = yf.Ticker(stock)
     currency_code = ticker.fast_info["currency"]
     return currency_code
-    
-
 
 
 def clean_stock_history(stock_history):
@@ -314,17 +339,21 @@ def clean_stock_history(stock_history):
     return stock_history
 
 
-def get_exchange_rate(from_currency, to_currency, period, interval)->pd.DataFrame:
+def get_exchange_rate(from_currency, to_currency, period, interval) -> pd.DataFrame:
     # 1 get currency code of the stock
 
     fx_rate_ticker = f"{from_currency}{to_currency}=X"
     fx_rates = yf.download(fx_rate_ticker, period=period, interval=interval)
     fx_rates["Ticker"] = fx_rate_ticker
     fx_rates["From Currency"] = from_currency
+
     fx_rates["To Currency"] = to_currency
     fx_rates = fx_rates.reset_index()
-    output_columns = [ "Date","Ticker","From Currency",
-        "To Currency",  
+    output_columns = [
+        "Date",
+        "Ticker",
+        "From Currency",
+        "To Currency",
         "Open",
         "High",
         "Low",
@@ -336,16 +365,16 @@ def get_exchange_rate(from_currency, to_currency, period, interval)->pd.DataFram
 
 
 if __name__ == "__main__":
-
     # res = get_exchange_rate2("USD", "GBP", "5d", "1d")
-    stock_history: pd.DataFrame = get_stock_history("goog")
-    
-    
-    
+    stock_history: pd.DataFrame = get_stock_history("goog","2025-05-20","2025-05-21")
+
     res = get_stock_history("SHOP.TO", "5d")
     tickers = [
         "AAPL",
-        "MSFT","GOOGL", "AMZN","TSLA",
+        "MSFT",
+        "GOOGL",
+        "AMZN",
+        "TSLA",
         # "SPY",
         "COST",
         "WMT",
@@ -363,12 +392,9 @@ if __name__ == "__main__":
         # "NIKE",
     ]
     for ticker in tickers:
-        financial = get_stock_financials('SHOP.TO')
+        financial = get_stock_financials("SHOP.TO")
         print(financial)
-        
-        
-        
-        
+
     # tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"]
     # get_stock_history("AAPL", "5d")
     # get_exchange_rate("SHOP.TO")

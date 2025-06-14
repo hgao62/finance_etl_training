@@ -1,5 +1,5 @@
 # Use the official Python image as the base image
-FROM python:3.9
+FROM python:3.11
 
 # Install system dependencies
 RUN apt-get update && \
@@ -20,14 +20,14 @@ RUN mkdir /usr/src/app
 # set the working directory to the directory created above
 WORKDIR /usr/src/app
 # copy the requirements file to the working directory
-COPY requirements.txt ./
+COPY requirements311.txt ./
 
 # Set the DAGs folder path
 
 # COPY ./airflow/dags/. ./dags 
 
 # install the dependencies
-RUN pip install -r requirements.txt
+RUN pip install -r requirements311.txt
 
 
 # copy the content of the local src directory to the working directory

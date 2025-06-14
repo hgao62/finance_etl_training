@@ -9,9 +9,9 @@ import main
 from load_data import DBType
 
 
-def run_etl(stock_list, period, interval, drop_existing_table, db_type):
+def run_etl(stock_list, start_date,end_date, drop_existing_table):
     print(f" stock list type is: {type(stock_list)}")
-    main.run_pipeline(stock_list, period, interval, drop_existing_table, db_type)
+    main.run_pipeline(stock_list,start_date,end_date,drop_existing_table)
 
 
 # DAG arguments with default parameters
@@ -23,10 +23,9 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
     "params": {
         "stock_list": ["AAPL"],
-        "period": "1d",
-        "interval": "1d",
+        "start_date": "2025-06-04",
+        "end_date": "2025-06-05",
         "drop_existing_table": True,
-        "db_type": DBType.MYSQL.value,
     },
 }
 
@@ -46,10 +45,9 @@ task_run_etl = PythonOperator(
     python_callable=run_etl,
     op_args=[
         "{{ params.stock_list }}",
-        "{{ params.period }}",
-        "{{ params.interval }}",
+        "{{ params.start_date }}",
+        "{{ params.end_date }}",
         "{{ params.drop_existing_table}}",
-        "{{ params.db_type}}",
     ],
     dag=dag,
 )

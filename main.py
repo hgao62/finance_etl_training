@@ -25,9 +25,7 @@ def run_pipeline(
     tickers: List[str],
     start_date: str,
     end_date: str,
-    interval: str = "1d",
     drop_existing_tables: bool = False,
-    db_type: DBType = DBType.MYSQL,
 ):
     """_summary_
 
@@ -38,14 +36,11 @@ def run_pipeline(
         drop_existing_tables (bool, optional): _description_. Defaults to False.
         db_type (DBType, optional): _description_. Defaults to DBType.MYSQL.
     """
-    db_engine = load_data.DB_ENGINE_MAP[db_type]
     logger.info(
-        "Running main function with parameters tickers:%s start_date:%s end_date:%s interval: %s  db_type: %s",
+        "Running main function with parameters tickers:%s start_date:%s end_date:%s",
         tickers,
         start_date,
         end_date,
-        interval,
-        db_type,
     )
     print(f" stock list type is: {type(tickers)}")
     if drop_existing_tables:

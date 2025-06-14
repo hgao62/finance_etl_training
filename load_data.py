@@ -39,7 +39,7 @@ import pandas as pd
 from sqlalchemy import create_engine,text
 
 # ✅ Use pymysql as driver
-MYSQL_CONNECTION_STRING = "mysql+pymysql://airflow_user:airflow_pass@localhost/airflow_db"
+MYSQL_CONNECTION_STRING = "mysql+pymysql://airflow_user:airflow_pass@mysql/airflow_db"
 
 MYSQL_POOL_ENGINE = create_engine(
     MYSQL_CONNECTION_STRING,
