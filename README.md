@@ -298,7 +298,6 @@ Please follow the steps below(also, you can refer to the video recording here fo
 https://drive.google.com/file/d/1kuKw1y7cZSpn0xj-DqfHaiU3qlii1F7u/view?usp=drive_link
 
 1. create vm on google cloud
-   ![alt text](image-10.png)
    <img alt="stock financial" src="./docs/image-10.png" width="1000">
 
 1.1
@@ -307,40 +306,6 @@ https://drive.google.com/file/d/1kuKw1y7cZSpn0xj-DqfHaiU3qlii1F7u/view?usp=drive
 <img alt="stock financial" src="./docs/image-12.png" width="1000">
 3. connect to your vm terminal by clicking ssh as below
 <img alt="stock financial" src="./docs/image-13.png" width="1000">
-4. follow steps below to allow vm to clone from your repo
-
-### How to authenticate vm to clone from your repo
-
-1. generate new ssh key
-   ssh-keygen -t ed25519 -C "your_email@example.com"(replace with your email)
-   ssh-keygen -t ed25519 -C "hgao62@uwo.ca"
-2. add ssh key to the ssh agent
-   2.1 start ssh agent
-   eval "$(ssh-agent -s)"
-   2.2 Add your SSH private key to the agent:
-   ssh-add ~/.ssh/id_ed25519
-3. copy your public key to github
-   cat ~/.ssh/id_ed25519.pub
-
-3.1 open your github setting page and click "SSH and GPG keys"
-
-<img alt="stock financial" src="./docs/image-6.png" width="1000">
-
-3.2 click "New SSH key"
-<img alt="stock financial" src="./docs/image-7.png" width="1000">
-
-4. test your ssh key works with github by running command below
-   ssh -T git@github.com
-
-all the commands you need to run in one screenshot
-
-<img alt="stock financial" src="./docs/image-8.png" width="1000">
-
-5. run
-   git clone <ssh path as shown in screenshot below>
-   <img alt="stock financial" src="./docs/image-14.png" width="1000">
-
-### How to authenticate vm to clone from your repo
 
 6. run:sudo usermod -aG docker $USER
 7. run:logout
@@ -588,3 +553,36 @@ https://everythingdevops.dev/how-to-deploy-a-multi-container-docker-compose-appl
 1. docker ps
 2. docker exec -it <container_name_or_id> sh
 3. run your command
+
+### How to authenticate vm to clone from your repo
+
+1. generate new ssh key
+   ssh-keygen -t ed25519 -C "your_email@example.com"(replace with your email)
+   ssh-keygen -t ed25519 -C "hgao62@uwo.ca"
+2. add ssh key to the ssh agent
+   2.1 start ssh agent
+   eval "$(ssh-agent -s)"
+   2.2 Add your SSH private key to the agent:
+   ssh-add ~/.ssh/id_ed25519
+3. copy your public key to github
+   cat ~/.ssh/id_ed25519.pub
+
+3.1 open your github setting page and click "SSH and GPG keys"
+
+<img alt="stock financial" src="./docs/image-6.png" width="1000">
+
+3.2 click "New SSH key"
+<img alt="stock financial" src="./docs/image-7.png" width="1000">
+
+4. test your ssh key works with github by running command below
+   ssh -T git@github.com
+
+all the commands you need to run in one screenshot
+
+<img alt="stock financial" src="./docs/image-8.png" width="1000">
+
+5. run
+   git clone <ssh path as shown in screenshot below>
+   <img alt="stock financial" src="./docs/image-14.png" width="1000">
+
+### How to authenticate vm to clone from your repo
