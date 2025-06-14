@@ -1,7 +1,8 @@
 
 services:
   mysql:
-    image: mysql:5.7 # Use the MySQL 5.7 image
+    # image: mysql:5.7 # Use the MySQL 5.7 image
+    image: mariadb:10.5
     environment:
       MYSQL_ROOT_PASSWORD: airflow_pass # Set the MySQL root password
       MYSQL_DATABASE: airflow_db # Create a database named airflow
