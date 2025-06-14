@@ -22,9 +22,10 @@ services:
      # Specify the Dockerfile to use for the build
      dockerfile: Dockerfile
    depends_on:
-    - mysql
+    mysql:
+      condition: service_healthy # Wait for the MySQL service to be healthy before starting
    ports:
-     - "8080:8080"  # Map the host port 8080 to the container 8080
+     - "8089:8080"  # Map the host port 8089 to the container 8080
    # Define the command to run when the container starts
    entrypoint: ./entrypoint.sh
    
