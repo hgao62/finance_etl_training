@@ -307,18 +307,18 @@ https://drive.google.com/file/d/1kuKw1y7cZSpn0xj-DqfHaiU3qlii1F7u/view?usp=drive
 3. connect to your vm terminal by clicking ssh as below
 <img alt="stock financial" src="./docs/image-13.png" width="1000">
 
-6. run:sudo usermod -aG docker $USER
-7. run:logout
-8. logout back in by click "SSH" ON VM(same as step 3 above)
-9. run: test command below to make sure no error
+4. run:sudo usermod -aG docker $USER
+5. run:logout
+6. logout back in by click "SSH" ON VM(same as step 3 above)
+7. run: test command below to make sure no error
    docker ps
-10. run: docker-compose up --build
+8. run: docker-compose up --build
 
-11. if experience finance_etl_training_airflow_webserver_1 exited with code 127
-    run: sudo apt install dos2unix
-    and then run:dos2unix entrypoint.sh
+9. if experience finance_etl_training_airflow_webserver_1 exited with code 127
+   run: sudo apt install dos2unix
+   and then run:dos2unix entrypoint.sh
 
-12. create fire wall rules by following below
+10. create fire wall rules by following below
     Firewall Configuration: Ensure that your VM’s firewall rules allow inbound traffic on port 8080. You can verify this in the Google Cloud Console under VPC Network > Firewall:
 
 Look for a rule that allows traffic on port 8080.
