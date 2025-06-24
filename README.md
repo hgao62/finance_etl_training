@@ -297,41 +297,107 @@ https://www.youtube.com/watch?v=s6PgXq-SO4I&list=PLc2EZr8W2QIAI0cS1nZGNxoLzppb7X
 Please follow the steps below(also, you can refer to the video recording here for more details )
 https://drive.google.com/file/d/1kuKw1y7cZSpn0xj-DqfHaiU3qlii1F7u/view?usp=drive_link
 
+0. go to [google cloud](https://cloud.google.com/) and click "Console"
+
+<img alt="stock financial" src="./docs/google_cloud.png" width="1000">
+
 1. create vm on google cloud
-   <img alt="stock financial" src="./docs/image-10.png" width="1000">
+
+<img alt="stock financial" src="./docs/image-10.png" width="1000">
 
 1.1
-<img alt="stock financial" src="./docs/image-11.png" width="1000"> 2. leave everything else as default except for changing this below(cheapest option) and click create
+
+<img alt="stock financial" src="./docs/image-11.png" width="1000">
+
+2. leave everything else as default except for changing this below(cheapest option) and click create
 
 <img alt="stock financial" src="./docs/image-12.png" width="1000">
+
 3. connect to your vm terminal by clicking ssh as below
+
 <img alt="stock financial" src="./docs/image-13.png" width="1000">
 
-4. run:sudo usermod -aG docker $USER
-5. run:logout
-6. logout back in by click "SSH" ON VM(same as step 3 above)
-7. run: test command below to make sure no error
-   docker ps
-8. run: docker-compose up --build
+4. install git and docker on VM(run each line one by one)
 
-9. if experience finance_etl_training_airflow_webserver_1 exited with code 127
-   run: sudo apt install dos2unix
-   and then run:dos2unix entrypoint.sh
+```
+sudo apt-get update -y
+sudo apt-get install -y git
 
-10. create fire wall rules by following below
-    Firewall Configuration: Ensure that your VM’s firewall rules allow inbound traffic on port 8080. You can verify this in the Google Cloud Console under VPC Network > Firewall:
+sudo apt-get install -y git docker.io
+sudo usermod -aG docker $USER
+newgrp docker
+sudo systemctl enable docker
+sudo systemctl start docker
 
-Look for a rule that allows traffic on port 8080.
-If there’s no rule, create one:
-Go to VPC Network > Firewall Rules.
-Click Create Firewall Rule.
-Set the following:
-Name: allow-airflow-8080.
-Targets: All instances in the network or specify your instance.
-Source IP ranges: 0.0.0.0/0 (to allow access from anywhere).
-Protocols and ports: Select TCP and specify port 8080.
 
-<img alt="stock financial" src="./docs/image-15.png" width="1000">
+mkdir -p ~/.docker/cli-plugins
+curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
+  -o ~/.docker/cli-plugins/docker-compose
+chmod +x ~/.docker/cli-plugins/docker-compose
+
+
+```
+
+4.1 Verify git and docker installed successfully by running commands below
+
+```
+git --version
+docker --version
+docker ps
+docker compose
+```
+
+5. run: git clone (your repo url, get your url as shown in screenshot below but use your repo)
+
+```
+  git clone https://github.com/hgao62/finance_etl_training.git
+```
+
+<img alt="stock financial" src="./docs/image-14.png" width="1000">
+
+6. cd into your project folder by running: cd (your project folder name), in my case it's
+
+```
+cd finance_etl_training
+```
+
+7. run: docker compose up --build
+   This command build and start the container. Once it's done, you should see this line showing up
+   Listening at: http://0.0.0.0:8080
+   <img alt="stock financial" src="./docs/compose.png" width="1000">
+
+8. create fire wall rules by following below
+   Firewall Configuration: Ensure that your VM’s firewall rules allow inbound traffic on port 8089.
+
+   You can verify this in the Google Cloud Console under VPC Network > Firewall:
+
+   Look for a rule that allows traffic on port 8080.
+   If there’s no rule, create one:
+   Go to VPC Network > Firewall Rules.
+   Click Create Firewall Rule.
+   Set the following:
+   Name: allow-airflow-8080.
+   Targets: All instances in the network or specify your instance.
+   Source IP ranges: 0.0.0.0/0 (to allow access from anywhere).
+   Protocols and ports: Select TCP and specify port 8080.
+
+   <img alt="stock financial" src="./docs/image-15.png" width="1000">
+
+9. Go to your browser to visit airflow home page by following instructions in screenshot below
+   <img alt="stock financial" src="./docs/airflow.png" width="1000">
+
+10. Open a new connection on google could and run commands below as shown in screenshot
+    <img alt="stock financial" src="./docs/gcp_container.png" width="1000">
+
+11. Go back to airflow home and refresh page and trigger dag to run manually
+    <img alt="stock financial" src="./docs/trigger_run.png" width="1000">
+
+12. Investigate logs if tag encountered errors during the run
+    <img alt="stock financial" src="./docs/dag_error.png" width="1000">
+
+if experience finance_etl_training_airflow_webserver_1 exited with code 127
+run: sudo apt install dos2unix
+and then run:dos2unix entrypoint.sh
 
 ### Commonly experienced issue
 
