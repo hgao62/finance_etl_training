@@ -387,6 +387,10 @@ cd finance_etl_training
    <img alt="stock financial" src="./docs/airflow.png" width="1000">
 
 10. Open a new connection on google could and run commands below as shown in screenshot
+
+    a. run: docker ps
+    b. run: docker exec -it (id from step above) sh
+    c. run: airflow scheduler
     <img alt="stock financial" src="./docs/gcp_container.png" width="1000">
 
 11. Go back to airflow home and refresh page and trigger dag to run manually
