@@ -366,20 +366,20 @@ cd finance_etl_training
    Listening at: http://0.0.0.0:8080
    <img alt="stock financial" src="./docs/compose.png" width="1000">
 
-8. create fire wall rules by following below
+8. (Optional, come back on this step if step 9 below doesn't work) create fire wall rules by following below
    Firewall Configuration: Ensure that your VM’s firewall rules allow inbound traffic on port 8089.
 
-   You can verify this in the Google Cloud Console under VPC Network > Firewall:
+You can verify this in the Google Cloud Console under VPC Network > Firewall:
 
-   Look for a rule that allows traffic on port 8080.
-   If there’s no rule, create one:
-   Go to VPC Network > Firewall Rules.
-   Click Create Firewall Rule.
-   Set the following:
-   Name: allow-airflow-8080.
-   Targets: All instances in the network or specify your instance.
-   Source IP ranges: 0.0.0.0/0 (to allow access from anywhere).
-   Protocols and ports: Select TCP and specify port 8080.
+Look for a rule that allows traffic on port 8080.
+If there’s no rule, create one:
+Go to VPC Network > Firewall Rules.
+Click Create Firewall Rule.
+Set the following:
+Name: allow-airflow-8080.
+Targets: All instances in the network or specify your instance.
+Source IP ranges: 0.0.0.0/0 (to allow access from anywhere).
+Protocols and ports: Select TCP and specify port 8080.
 
    <img alt="stock financial" src="./docs/image-15.png" width="1000">
 
